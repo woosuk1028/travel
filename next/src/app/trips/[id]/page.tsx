@@ -1,22 +1,17 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { ExpensesTab } from "@/components/trip/ExpensesTab";
-import { PhotosTab } from "@/components/trip/PhotosTab";
-import { PlacesTab } from "@/components/trip/PlacesTab";
+import { useCallback, useEffect, useState } from "react";
+import { ExpenseForm } from "@/components/trip/ExpenseForm";
+import { Feed } from "@/components/trip/Feed";
+import { PhotoForm } from "@/components/trip/PhotoForm";
+import { PlaceForm } from "@/components/trip/PlaceForm";
 import { TripHeader } from "@/components/trip/TripHeader";
 import { api, ApiError } from "@/lib/api";
 import { useRequireAuth } from "@/lib/auth";
-import type { Place, Trip } from "@/lib/types";
+import type { Expense, Photo, Place, Trip } from "@/lib/types";
 
-type TabKey = "places" | "expenses" | "photos";
-
-const TABS: { key: TabKey; label: string }[] = [
-  { key: "places", label: "장소" },
-  { key: "expenses", label: "지출" },
-  { key: "photos", label: "사진" },
-];
+type FormKind = "place" | "expense" | "photo" | null;
 
 export default function TripDetailPage() {
   const params = useParams<{ id: string }>();
@@ -26,26 +21,33 @@ export default function TripDetailPage() {
 
   const [trip, setTrip] = useState<Trip | null>(null);
   const [places, setPlaces] = useState<Place[]>([]);
+  const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [photos, setPhotos] = useState<Photo[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [tab, setTab] = useState<TabKey>("places");
+  const [openForm, setOpenForm] = useState<FormKind>(null);
+
+  const refreshAll = useCallback(async () => {
+    if (!Number.isFinite(tripId)) return;
+    try {
+      const [t, ps, es, phs] = await Promise.all([
+        api.get<Trip>(`/trips/${tripId}`),
+        api.get<Place[]>(`/trips/${tripId}/places`),
+        api.get<Expense[]>(`/trips/${tripId}/expenses`),
+        api.get<Photo[]>(`/trips/${tripId}/photos`),
+      ]);
+      setTrip(t);
+      setPlaces(ps);
+      setExpenses(es);
+      setPhotos(phs);
+    } catch (err) {
+      const e = err as ApiError;
+      setError(e.status === 404 ? "여행을 찾을 수 없습니다." : e.message);
+    }
+  }, [tripId]);
 
   useEffect(() => {
-    if (!user || Number.isNaN(tripId)) return;
-    api
-      .get<Trip>(`/trips/${tripId}`)
-      .then(setTrip)
-      .catch((err: ApiError) => {
-        if (err.status === 404) {
-          setError("여행을 찾을 수 없습니다.");
-        } else {
-          setError(err.message);
-        }
-      });
-    api
-      .get<Place[]>(`/trips/${tripId}/places`)
-      .then(setPlaces)
-      .catch(() => {});
-  }, [user, tripId]);
+    if (user) void refreshAll();
+  }, [user, refreshAll]);
 
   if (authLoading || !user) return <p className="text-zinc-500">로딩중...</p>;
   if (Number.isNaN(tripId)) {
@@ -67,34 +69,88 @@ export default function TripDetailPage() {
   }
   if (!trip) return <p className="text-zinc-500">불러오는 중...</p>;
 
+  function onCreated() {
+    setOpenForm(null);
+    void refreshAll();
+  }
+
   return (
     <article className="flex flex-col gap-6">
       <TripHeader trip={trip} onChanged={setTrip} />
 
-      <div className="flex gap-1 border-b border-zinc-200 dark:border-zinc-800">
-        {TABS.map((t) => (
+      <AddBar
+        openForm={openForm}
+        onToggle={(k) => setOpenForm((cur) => (cur === k ? null : k))}
+      />
+
+      {openForm === "place" && (
+        <PlaceForm
+          trip={trip}
+          onCreated={onCreated}
+          onCancel={() => setOpenForm(null)}
+        />
+      )}
+      {openForm === "expense" && (
+        <ExpenseForm
+          trip={trip}
+          places={places}
+          onCreated={onCreated}
+          onCancel={() => setOpenForm(null)}
+        />
+      )}
+      {openForm === "photo" && (
+        <PhotoForm
+          trip={trip}
+          places={places}
+          onCreated={onCreated}
+          onCancel={() => setOpenForm(null)}
+        />
+      )}
+
+      <Feed
+        trip={trip}
+        places={places}
+        expenses={expenses}
+        photos={photos}
+        onChanged={refreshAll}
+      />
+    </article>
+  );
+}
+
+function AddBar({
+  openForm,
+  onToggle,
+}: {
+  openForm: FormKind;
+  onToggle: (k: Exclude<FormKind, null>) => void;
+}) {
+  const buttons: { kind: Exclude<FormKind, null>; icon: string; label: string }[] =
+    [
+      { kind: "place", icon: "📍", label: "장소" },
+      { kind: "expense", icon: "💸", label: "지출" },
+      { kind: "photo", icon: "📷", label: "사진" },
+    ];
+  return (
+    <div className="grid grid-cols-3 gap-2">
+      {buttons.map((b) => {
+        const active = openForm === b.kind;
+        return (
           <button
-            key={t.key}
+            key={b.kind}
             type="button"
-            onClick={() => setTab(t.key)}
-            className={`px-4 py-2 text-sm font-medium transition ${
-              tab === t.key
-                ? "border-b-2 border-black text-black dark:border-white dark:text-white"
-                : "text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200"
+            onClick={() => onToggle(b.kind)}
+            className={`flex items-center justify-center gap-2 rounded-xl border px-3 py-3 text-sm font-medium transition ${
+              active
+                ? "border-indigo-500 bg-indigo-600 text-white shadow-sm"
+                : "border-zinc-200 bg-white hover:border-indigo-300 hover:bg-indigo-50 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-indigo-700 dark:hover:bg-indigo-950"
             }`}
           >
-            {t.label}
+            <span>{b.icon}</span>
+            <span>{active ? "닫기" : `+ ${b.label}`}</span>
           </button>
-        ))}
-      </div>
-
-      {tab === "places" && (
-        <PlacesTab tripId={tripId} onPlacesChange={setPlaces} />
-      )}
-      {tab === "expenses" && (
-        <ExpensesTab tripId={tripId} places={places} />
-      )}
-      {tab === "photos" && <PhotosTab tripId={tripId} places={places} />}
-    </article>
+        );
+      })}
+    </div>
   );
 }

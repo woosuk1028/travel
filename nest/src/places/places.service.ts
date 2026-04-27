@@ -17,7 +17,7 @@ export class PlacesService {
     await this.tripsService.findOneByUser(userId, tripId);
     return this.places.find({
       where: { tripId },
-      order: { visitDate: 'ASC', dayOrder: 'ASC', id: 'ASC' },
+      order: { visitAt: 'ASC', dayOrder: 'ASC', id: 'ASC' },
     });
   }
 

@@ -30,7 +30,7 @@ export class CreatePlaceDto {
 
   @IsOptional()
   @IsDateString()
-  visitDate?: string;
+  visitAt?: string;
 
   @IsOptional()
   @IsInt()

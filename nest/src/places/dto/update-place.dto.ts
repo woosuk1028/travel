@@ -31,7 +31,7 @@ export class UpdatePlaceDto {
 
   @IsOptional()
   @IsDateString()
-  visitDate?: string;
+  visitAt?: string;
 
   @IsOptional()
   @IsInt()

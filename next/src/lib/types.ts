@@ -27,7 +27,7 @@ export type Place = {
   address?: string | null;
   lat?: string | null;
   lng?: string | null;
-  visitDate?: string | null;
+  visitAt?: string | null;
   dayOrder: number;
   memo?: string | null;
   createdAt: string;

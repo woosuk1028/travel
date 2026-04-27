@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { api, ApiError } from "@/lib/api";
 import type { Trip } from "@/lib/types";
+import { Field, formCardClass, FormFooter, formInputClass } from "./formBits";
 
 export function TripHeader({
   trip,
@@ -16,7 +17,11 @@ export function TripHeader({
   const [editing, setEditing] = useState(false);
 
   async function handleDelete() {
-    if (!confirm("이 여행을 삭제하시겠습니까? 장소·지출·사진이 모두 함께 삭제됩니다.")) {
+    if (
+      !confirm(
+        "이 여행을 삭제하시겠습니까? 장소·지출·사진이 모두 함께 삭제됩니다.",
+      )
+    ) {
       return;
     }
     try {
@@ -27,54 +32,67 @@ export function TripHeader({
     }
   }
 
+  if (editing) {
+    return (
+      <EditForm
+        trip={trip}
+        onCancel={() => setEditing(false)}
+        onSaved={(t) => {
+          onChanged(t);
+          setEditing(false);
+        }}
+      />
+    );
+  }
+
   return (
-    <header className="flex flex-col gap-3 border-b border-zinc-200 pb-6 dark:border-zinc-800">
-      {editing ? (
-        <EditForm
-          trip={trip}
-          onCancel={() => setEditing(false)}
-          onSaved={(t) => {
-            onChanged(t);
-            setEditing(false);
-          }}
-        />
-      ) : (
-        <>
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <h1 className="text-3xl font-semibold tracking-tight">
-                {trip.title}
-              </h1>
-              <p className="mt-1 text-sm text-zinc-500">
-                {trip.startDate} ~ {trip.endDate}
-              </p>
-            </div>
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={() => setEditing(true)}
-                className="rounded-md border border-zinc-300 px-3 py-1.5 text-sm transition hover:bg-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-900"
-              >
-                수정
-              </button>
-              <button
-                type="button"
-                onClick={handleDelete}
-                className="rounded-md border border-red-300 px-3 py-1.5 text-sm text-red-600 transition hover:bg-red-50 dark:border-red-800 dark:hover:bg-red-950"
-              >
-                삭제
-              </button>
-            </div>
-          </div>
-          {trip.description && (
-            <p className="whitespace-pre-wrap text-sm text-zinc-700 dark:text-zinc-300">
-              {trip.description}
-            </p>
-          )}
-        </>
+    <header className="rounded-2xl bg-gradient-to-br from-indigo-500 via-indigo-600 to-violet-700 p-6 text-white shadow-md">
+      <div className="flex items-start justify-between gap-4">
+        <div className="min-w-0">
+          <h1 className="truncate text-3xl font-semibold tracking-tight">
+            {trip.title}
+          </h1>
+          <p className="mt-1 text-sm font-medium text-indigo-100">
+            {trip.startDate} ~ {trip.endDate}
+            <span className="ml-2 text-indigo-200">
+              ({tripDurationLabel(trip.startDate, trip.endDate)})
+            </span>
+          </p>
+        </div>
+        <div className="flex shrink-0 gap-2">
+          <button
+            type="button"
+            onClick={() => setEditing(true)}
+            className="rounded-md border border-white/30 bg-white/10 px-3 py-1.5 text-sm text-white backdrop-blur transition hover:bg-white/20"
+          >
+            수정
+          </button>
+          <button
+            type="button"
+            onClick={handleDelete}
+            className="rounded-md border border-white/30 bg-white/10 px-3 py-1.5 text-sm text-white backdrop-blur transition hover:bg-red-500/40"
+          >
+            삭제
+          </button>
+        </div>
+      </div>
+      {trip.description && (
+        <p className="mt-3 whitespace-pre-wrap text-sm text-indigo-50">
+          {trip.description}
+        </p>
       )}
     </header>
   );
+}
+
+function tripDurationLabel(start: string, end: string) {
+  const days =
+    Math.round(
+      (new Date(end).getTime() - new Date(start).getTime()) /
+        (1000 * 60 * 60 * 24),
+    ) + 1;
+  if (days < 2) return "당일";
+  return `${days - 1}박 ${days}일`;
 }
 
 function EditForm({
@@ -113,66 +131,48 @@ function EditForm({
   }
 
   return (
-    <form onSubmit={submit} className="grid gap-3 sm:grid-cols-2">
-      <label className="flex flex-col gap-1 text-sm sm:col-span-2">
-        <span className="text-zinc-600 dark:text-zinc-400">제목</span>
+    <form onSubmit={submit} className={formCardClass}>
+      <Field label="제목" className="sm:col-span-2">
         <input
           required
           maxLength={200}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className={inputClass}
+          className={formInputClass}
         />
-      </label>
-      <label className="flex flex-col gap-1 text-sm">
-        <span className="text-zinc-600 dark:text-zinc-400">시작일</span>
+      </Field>
+      <Field label="시작일">
         <input
           type="date"
           required
           value={startDate}
           onChange={(e) => setStartDate(e.target.value)}
-          className={inputClass}
+          className={formInputClass}
         />
-      </label>
-      <label className="flex flex-col gap-1 text-sm">
-        <span className="text-zinc-600 dark:text-zinc-400">종료일</span>
+      </Field>
+      <Field label="종료일">
         <input
           type="date"
           required
           value={endDate}
           onChange={(e) => setEndDate(e.target.value)}
-          className={inputClass}
+          className={formInputClass}
         />
-      </label>
-      <label className="flex flex-col gap-1 text-sm sm:col-span-2">
-        <span className="text-zinc-600 dark:text-zinc-400">설명</span>
+      </Field>
+      <Field label="설명" optional className="sm:col-span-2">
         <textarea
           rows={3}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className={inputClass}
+          className={formInputClass}
         />
-      </label>
-      {error && <p className="text-sm text-red-600 sm:col-span-2">{error}</p>}
-      <div className="flex gap-2 sm:col-span-2">
-        <button
-          type="submit"
-          disabled={submitting}
-          className="rounded-md bg-black px-4 py-2 text-sm text-white disabled:opacity-60 dark:bg-white dark:text-black"
-        >
-          {submitting ? "..." : "저장"}
-        </button>
-        <button
-          type="button"
-          onClick={onCancel}
-          className="rounded-md border border-zinc-300 px-4 py-2 text-sm dark:border-zinc-700"
-        >
-          취소
-        </button>
-      </div>
+      </Field>
+      <FormFooter
+        error={error}
+        submitting={submitting}
+        submitLabel="저장"
+        onCancel={onCancel}
+      />
     </form>
   );
 }
-
-const inputClass =
-  "rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black dark:border-zinc-700 dark:bg-zinc-950 dark:focus:border-white dark:focus:ring-white";

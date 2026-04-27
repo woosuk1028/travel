@@ -29,9 +29,18 @@ export default function LoginPage() {
   }
 
   return (
-    <section className="mx-auto max-w-sm py-12">
-      <h1 className="mb-6 text-2xl font-semibold">로그인</h1>
-      <form onSubmit={onSubmit} className="flex flex-col gap-4">
+    <section className="mx-auto max-w-sm py-10">
+      <div className="mb-8 text-center">
+        <div className="mb-3 text-4xl">🔑</div>
+        <h1 className="text-2xl font-semibold tracking-tight">로그인</h1>
+        <p className="mt-1 text-sm text-zinc-500">
+          여행 일지에 다시 오신 것을 환영합니다.
+        </p>
+      </div>
+      <form
+        onSubmit={onSubmit}
+        className="flex flex-col gap-4 rounded-xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
+      >
         <Field label="이메일">
           <input
             type="email"
@@ -52,27 +61,34 @@ export default function LoginPage() {
             className={inputClass}
           />
         </Field>
-        {error && <p className="text-sm text-red-600">{error}</p>}
+        {error && (
+          <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700 dark:bg-red-950 dark:text-red-300">
+            {error}
+          </p>
+        )}
         <button
           type="submit"
           disabled={submitting}
-          className="rounded-md bg-black py-2 text-white transition hover:bg-zinc-800 disabled:opacity-60 dark:bg-white dark:text-black dark:hover:bg-zinc-200"
+          className="rounded-md bg-indigo-600 py-2.5 font-medium text-white transition hover:bg-indigo-700 disabled:opacity-60"
         >
           {submitting ? "..." : "로그인"}
         </button>
-        <p className="text-sm text-zinc-600 dark:text-zinc-400">
-          계정이 없으신가요?{" "}
-          <Link href="/signup" className="font-medium underline">
-            회원가입
-          </Link>
-        </p>
       </form>
+      <p className="mt-4 text-center text-sm text-zinc-600 dark:text-zinc-400">
+        계정이 없으신가요?{" "}
+        <Link
+          href="/signup"
+          className="font-medium text-indigo-600 hover:underline dark:text-indigo-400"
+        >
+          회원가입
+        </Link>
+      </p>
     </section>
   );
 }
 
 const inputClass =
-  "rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black dark:border-zinc-700 dark:bg-zinc-900 dark:focus:border-white dark:focus:ring-white";
+  "rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-zinc-700 dark:bg-zinc-950";
 
 function Field({
   label,

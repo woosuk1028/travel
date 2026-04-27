@@ -35,8 +35,8 @@ export class Place {
   @Column({ type: 'decimal', precision: 10, scale: 7, nullable: true })
   lng?: string | null;
 
-  @Column({ name: 'visit_date', type: 'date', nullable: true })
-  visitDate?: string | null;
+  @Column({ name: 'visit_at', type: 'datetime', nullable: true })
+  visitAt?: Date | null;
 
   @Column({ name: 'day_order', type: 'int', default: 0 })
   dayOrder!: number;

@@ -32,7 +32,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100">
         <AuthProvider>
           <Nav />
-          <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-8">
+          <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-6 sm:px-6 sm:py-8">
             {children}
           </main>
         </AuthProvider>
