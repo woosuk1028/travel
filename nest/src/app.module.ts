@@ -15,18 +15,25 @@ import { PhotosModule } from './photos/photos.module';
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        type: 'mariadb',
-        host: config.get<string>('DB_HOST'),
-        port: parseInt(config.get<string>('DB_PORT') ?? '3306', 10),
-        username: config.get<string>('DB_USERNAME'),
-        password: config.get<string>('DB_PASSWORD'),
-        database: config.get<string>('DB_DATABASE'),
-        autoLoadEntities: true,
-        synchronize: true,
-        charset: 'utf8mb4',
-        timezone: 'Z',
-      }),
+      useFactory: (config: ConfigService) => {
+        const isProduction =
+          config.get<string>('NODE_ENV') === 'production';
+        return {
+          type: 'mariadb',
+          host: config.get<string>('DB_HOST'),
+          port: parseInt(config.get<string>('DB_PORT') ?? '3306', 10),
+          username: config.get<string>('DB_USERNAME'),
+          password: config.get<string>('DB_PASSWORD'),
+          database: config.get<string>('DB_DATABASE'),
+          autoLoadEntities: true,
+          synchronize: !isProduction,
+          migrationsRun: isProduction,
+          migrations: isProduction ? ['dist/migrations/*.js'] : [],
+          migrationsTableName: 'typeorm_migrations',
+          charset: 'utf8mb4',
+          timezone: 'Z',
+        };
+      },
     }),
     UsersModule,
     AuthModule,
