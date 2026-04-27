@@ -6,6 +6,7 @@ import {
   datetimeBounds,
   defaultPlanTime,
   fromLocalInputValue,
+  toLocalInputValue,
 } from "@/lib/datetime";
 import type { Expense, ExpenseCategory, Place, Trip } from "@/lib/types";
 import { Field, formInputClass, FormFooter, formCardClass } from "./formBits";
@@ -25,24 +26,39 @@ const CURRENCIES: { value: string; label: string }[] = [
   { value: "JPY", label: "엔 (JPY)" },
 ];
 
+type Mode = { kind: "create" } | { kind: "edit"; expense: Expense };
+
 export function ExpenseForm({
   trip,
   places,
-  onCreated,
+  mode = { kind: "create" },
+  onSaved,
   onCancel,
 }: {
   trip: Trip;
   places: Place[];
-  onCreated: () => void;
+  mode?: Mode;
+  onSaved: () => void;
   onCancel: () => void;
 }) {
+  const isEdit = mode.kind === "edit";
+  const initial = isEdit ? mode.expense : null;
   const bounds = datetimeBounds(trip.startDate, trip.endDate);
-  const [amount, setAmount] = useState("");
-  const [currency, setCurrency] = useState("KRW");
-  const [category, setCategory] = useState<ExpenseCategory>("food");
-  const [description, setDescription] = useState("");
-  const [paidAt, setPaidAt] = useState(defaultPlanTime(trip.startDate));
-  const [placeId, setPlaceId] = useState<string>("");
+
+  const [amount, setAmount] = useState(initial?.amount ?? "");
+  const [currency, setCurrency] = useState(initial?.currency ?? "KRW");
+  const [category, setCategory] = useState<ExpenseCategory>(
+    initial?.category ?? "food",
+  );
+  const [description, setDescription] = useState(initial?.description ?? "");
+  const [paidAt, setPaidAt] = useState(
+    initial?.paidAt
+      ? toLocalInputValue(initial.paidAt)
+      : defaultPlanTime(trip.startDate),
+  );
+  const [placeId, setPlaceId] = useState<string>(
+    initial?.placeId ? String(initial.placeId) : "",
+  );
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -57,15 +73,23 @@ export function ExpenseForm({
         setSubmitting(false);
         return;
       }
-      await api.post<Expense>(`/trips/${trip.id}/expenses`, {
+      const body = {
         amount,
         currency,
         category,
-        description: description || undefined,
+        description: description || (isEdit ? null : undefined),
         paidAt: iso,
-        placeId: placeId ? parseInt(placeId, 10) : undefined,
-      });
-      onCreated();
+        placeId: placeId ? parseInt(placeId, 10) : isEdit ? null : undefined,
+      };
+      if (isEdit) {
+        await api.patch<Expense>(
+          `/trips/${trip.id}/expenses/${initial!.id}`,
+          body,
+        );
+      } else {
+        await api.post<Expense>(`/trips/${trip.id}/expenses`, body);
+      }
+      onSaved();
     } catch (err) {
       setError((err as ApiError).message);
     } finally {
@@ -146,7 +170,7 @@ export function ExpenseForm({
       )}
       <Field label="설명" optional className="sm:col-span-2">
         <input
-          value={description}
+          value={description ?? ""}
           onChange={(e) => setDescription(e.target.value)}
           className={formInputClass}
         />
@@ -154,7 +178,7 @@ export function ExpenseForm({
       <FormFooter
         error={error}
         submitting={submitting}
-        submitLabel="지출 추가"
+        submitLabel={isEdit ? "저장" : "지출 추가"}
         onCancel={onCancel}
       />
     </form>

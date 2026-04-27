@@ -6,24 +6,36 @@ import {
   datetimeBounds,
   defaultPlanTime,
   fromLocalInputValue,
+  toLocalInputValue,
 } from "@/lib/datetime";
 import type { Place, Trip } from "@/lib/types";
 import { Field, formInputClass, FormFooter, formCardClass } from "./formBits";
 
+type Mode = { kind: "create" } | { kind: "edit"; place: Place };
+
 export function PlaceForm({
   trip,
-  onCreated,
+  mode = { kind: "create" },
+  onSaved,
   onCancel,
 }: {
   trip: Trip;
-  onCreated: () => void;
+  mode?: Mode;
+  onSaved: () => void;
   onCancel: () => void;
 }) {
+  const isEdit = mode.kind === "edit";
+  const initial = isEdit ? mode.place : null;
   const bounds = datetimeBounds(trip.startDate, trip.endDate);
-  const [name, setName] = useState("");
-  const [address, setAddress] = useState("");
-  const [visitAt, setVisitAt] = useState(defaultPlanTime(trip.startDate));
-  const [memo, setMemo] = useState("");
+
+  const [name, setName] = useState(initial?.name ?? "");
+  const [address, setAddress] = useState(initial?.address ?? "");
+  const [visitAt, setVisitAt] = useState(
+    initial?.visitAt
+      ? toLocalInputValue(initial.visitAt)
+      : defaultPlanTime(trip.startDate),
+  );
+  const [memo, setMemo] = useState(initial?.memo ?? "");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -32,13 +44,21 @@ export function PlaceForm({
     setSubmitting(true);
     setError(null);
     try {
-      await api.post<Place>(`/trips/${trip.id}/places`, {
+      const body = {
         name,
-        address: address || undefined,
-        visitAt: fromLocalInputValue(visitAt),
-        memo: memo || undefined,
-      });
-      onCreated();
+        address: address || (isEdit ? null : undefined),
+        visitAt: fromLocalInputValue(visitAt) ?? (isEdit ? null : undefined),
+        memo: memo || (isEdit ? null : undefined),
+      };
+      if (isEdit) {
+        await api.patch<Place>(
+          `/trips/${trip.id}/places/${initial!.id}`,
+          body,
+        );
+      } else {
+        await api.post<Place>(`/trips/${trip.id}/places`, body);
+      }
+      onSaved();
     } catch (err) {
       setError((err as ApiError).message);
     } finally {
@@ -60,7 +80,7 @@ export function PlaceForm({
       </Field>
       <Field label="주소" optional className="sm:col-span-2">
         <input
-          value={address}
+          value={address ?? ""}
           onChange={(e) => setAddress(e.target.value)}
           className={formInputClass}
         />
@@ -81,7 +101,7 @@ export function PlaceForm({
       <Field label="메모" optional className="sm:col-span-2">
         <textarea
           rows={3}
-          value={memo}
+          value={memo ?? ""}
           onChange={(e) => setMemo(e.target.value)}
           className={formInputClass}
         />
@@ -89,7 +109,7 @@ export function PlaceForm({
       <FormFooter
         error={error}
         submitting={submitting}
-        submitLabel="장소 추가"
+        submitLabel={isEdit ? "저장" : "장소 추가"}
         onCancel={onCancel}
       />
     </form>

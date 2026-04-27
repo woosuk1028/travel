@@ -86,7 +86,7 @@ export default function TripDetailPage() {
       {openForm === "place" && (
         <PlaceForm
           trip={trip}
-          onCreated={onCreated}
+          onSaved={onCreated}
           onCancel={() => setOpenForm(null)}
         />
       )}
@@ -94,7 +94,7 @@ export default function TripDetailPage() {
         <ExpenseForm
           trip={trip}
           places={places}
-          onCreated={onCreated}
+          onSaved={onCreated}
           onCancel={() => setOpenForm(null)}
         />
       )}
@@ -102,7 +102,7 @@ export default function TripDetailPage() {
         <PhotoForm
           trip={trip}
           places={places}
-          onCreated={onCreated}
+          onSaved={onCreated}
           onCancel={() => setOpenForm(null)}
         />
       )}

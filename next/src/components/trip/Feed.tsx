@@ -1,13 +1,12 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { api, API_BASE_URL, ApiError } from "@/lib/api";
-import {
-  dayKey,
-  formatDayHeader,
-  formatTimeShort,
-} from "@/lib/datetime";
+import { dayKey, formatDayHeader, formatTimeShort } from "@/lib/datetime";
 import type { Expense, Photo, Place, Trip } from "@/lib/types";
+import { ExpenseForm } from "./ExpenseForm";
+import { PhotoForm } from "./PhotoForm";
+import { PlaceForm } from "./PlaceForm";
 
 const CATEGORY_META: Record<
   Expense["category"],
@@ -39,6 +38,8 @@ export function Feed({
   photos: Photo[];
   onChanged: () => void;
 }) {
+  const [editingKey, setEditingKey] = useState<string | null>(null);
+
   const groups = useMemo(() => {
     const fallback = `${trip.startDate}T00:00:00`;
     const items: FeedItem[] = [
@@ -93,6 +94,11 @@ export function Feed({
     );
   }
 
+  function handleSaved() {
+    setEditingKey(null);
+    onChanged();
+  }
+
   return (
     <div className="flex flex-col gap-8">
       {groups.map(([day, items]) => (
@@ -103,15 +109,28 @@ export function Feed({
             </h3>
           </div>
           <ul className="flex flex-col gap-2">
-            {items.map((it) => (
-              <FeedRow
-                key={it.key}
-                item={it}
-                placesById={placesById}
-                tripId={trip.id}
-                onChanged={onChanged}
-              />
-            ))}
+            {items.map((it) =>
+              editingKey === it.key ? (
+                <li key={it.key}>
+                  <EditFormFor
+                    item={it}
+                    trip={trip}
+                    places={places}
+                    onSaved={handleSaved}
+                    onCancel={() => setEditingKey(null)}
+                  />
+                </li>
+              ) : (
+                <FeedRow
+                  key={it.key}
+                  item={it}
+                  placesById={placesById}
+                  tripId={trip.id}
+                  onEdit={() => setEditingKey(it.key)}
+                  onChanged={onChanged}
+                />
+              ),
+            )}
           </ul>
         </section>
       ))}
@@ -119,15 +138,62 @@ export function Feed({
   );
 }
 
+function EditFormFor({
+  item,
+  trip,
+  places,
+  onSaved,
+  onCancel,
+}: {
+  item: FeedItem;
+  trip: Trip;
+  places: Place[];
+  onSaved: () => void;
+  onCancel: () => void;
+}) {
+  if (item.kind === "place") {
+    return (
+      <PlaceForm
+        trip={trip}
+        mode={{ kind: "edit", place: item.data }}
+        onSaved={onSaved}
+        onCancel={onCancel}
+      />
+    );
+  }
+  if (item.kind === "expense") {
+    return (
+      <ExpenseForm
+        trip={trip}
+        places={places}
+        mode={{ kind: "edit", expense: item.data }}
+        onSaved={onSaved}
+        onCancel={onCancel}
+      />
+    );
+  }
+  return (
+    <PhotoForm
+      trip={trip}
+      places={places}
+      mode={{ kind: "edit", photo: item.data }}
+      onSaved={onSaved}
+      onCancel={onCancel}
+    />
+  );
+}
+
 function FeedRow({
   item,
   placesById,
   tripId,
+  onEdit,
   onChanged,
 }: {
   item: FeedItem;
   placesById: Map<number, Place>;
   tripId: number;
+  onEdit: () => void;
   onChanged: () => void;
 }) {
   async function handleDelete() {
@@ -159,9 +225,10 @@ function FeedRow({
         <span className="font-mono text-sm font-semibold text-zinc-900 dark:text-zinc-100">
           {time}
         </span>
-        <KindBadge kind={item.kind} category={
-          item.kind === "expense" ? item.data.category : undefined
-        } />
+        <KindBadge
+          kind={item.kind}
+          category={item.kind === "expense" ? item.data.category : undefined}
+        />
       </div>
       <div className="min-w-0 flex-1">
         {item.kind === "place" && <PlaceCard place={item.data} />}
@@ -186,14 +253,22 @@ function FeedRow({
           />
         )}
       </div>
-      <button
-        type="button"
-        onClick={handleDelete}
-        className="self-start text-xs text-zinc-400 opacity-0 transition group-hover:opacity-100 hover:text-red-600"
-        aria-label="삭제"
-      >
-        삭제
-      </button>
+      <div className="flex shrink-0 flex-col items-end gap-1 self-start text-xs opacity-0 transition group-hover:opacity-100">
+        <button
+          type="button"
+          onClick={onEdit}
+          className="text-indigo-600 hover:underline dark:text-indigo-400"
+        >
+          수정
+        </button>
+        <button
+          type="button"
+          onClick={handleDelete}
+          className="text-zinc-400 hover:text-red-600"
+        >
+          삭제
+        </button>
+      </div>
     </li>
   );
 }
