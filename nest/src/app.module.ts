@@ -34,7 +34,7 @@ import { PushModule } from './push/push.module';
           migrations: isProduction ? ['dist/migrations/*.js'] : [],
           migrationsTableName: 'typeorm_migrations',
           charset: 'utf8mb4',
-          timezone: 'Z',
+          timezone: '+09:00',
         };
       },
     }),

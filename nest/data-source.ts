@@ -17,6 +17,7 @@ export default new DataSource({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
   charset: 'utf8mb4',
+  timezone: '+09:00',
   entities: [
     User,
     Trip,
