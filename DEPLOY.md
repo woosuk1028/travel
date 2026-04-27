@@ -29,9 +29,9 @@ sudo mariadb
 ```
 
 ```sql
-CREATE DATABASE tb_travel CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE travel CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 CREATE USER 'travel_app'@'localhost' IDENTIFIED BY '강력한_비밀번호';
-GRANT ALL PRIVILEGES ON tb_travel.* TO 'travel_app'@'localhost';
+GRANT ALL PRIVILEGES ON travel.* TO 'travel_app'@'localhost';
 FLUSH PRIVILEGES;
 EXIT;
 ```
@@ -159,7 +159,7 @@ pm2 restart ecosystem.config.js
 
 ## 백업 대상
 
-1. **DB**: `mariadb-dump -u travel_app -p tb_travel > backup-$(date +%F).sql`
+1. **DB**: `mariadb-dump -u travel_app -p travel > backup-$(date +%F).sql`
 2. **업로드 파일**: `/var/www/travel/nest/uploads/` (정기 rsync 또는 tar)
 
 DB 백업만 있고 uploads 백업이 없으면 사진은 모두 사라집니다.
