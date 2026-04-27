@@ -253,18 +253,18 @@ function FeedRow({
           />
         )}
       </div>
-      <div className="flex shrink-0 flex-col items-end gap-1 self-start text-xs opacity-0 transition group-hover:opacity-100">
+      <div className="flex shrink-0 flex-col items-end gap-1 self-start text-xs">
         <button
           type="button"
           onClick={onEdit}
-          className="text-indigo-600 hover:underline dark:text-indigo-400"
+          className="rounded px-1.5 py-0.5 font-medium text-indigo-600 hover:bg-indigo-50 dark:text-indigo-400 dark:hover:bg-indigo-950"
         >
           수정
         </button>
         <button
           type="button"
           onClick={handleDelete}
-          className="text-zinc-400 hover:text-red-600"
+          className="rounded px-1.5 py-0.5 text-zinc-500 hover:bg-red-50 hover:text-red-600 dark:text-zinc-400 dark:hover:bg-red-950"
         >
           삭제
         </button>
