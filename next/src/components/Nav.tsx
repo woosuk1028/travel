@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth";
+import { PushToggle } from "./PushToggle";
 
 export function Nav() {
   const { user, logout } = useAuth();
@@ -28,9 +29,10 @@ export function Nav() {
                 내 여행
               </Link>
               <span className="hidden text-zinc-400 sm:inline">·</span>
-              <span className="text-zinc-600 dark:text-zinc-400">
+              <span className="hidden text-zinc-600 dark:text-zinc-400 sm:inline">
                 {user.name}
               </span>
+              <PushToggle />
               <button
                 type="button"
                 onClick={() => {
