@@ -102,16 +102,22 @@ export class PushService implements OnModuleInit {
   /** Runs every minute. Finds items starting in 4–6 min and pushes one alert each. */
   @Cron(CronExpression.EVERY_MINUTE)
   async dispatchUpcomingReminders() {
-    if (!this.vapidConfigured) return;
+    if (!this.vapidConfigured) {
+      this.logger.warn('cron tick: VAPID not configured, skipping');
+      return;
+    }
 
     const now = new Date();
     const from = new Date(now.getTime() + 4 * 60 * 1000);
     const to = new Date(now.getTime() + 6 * 60 * 1000);
 
+    this.logger.log(
+      `cron tick: now=${now.toISOString()} window=[${from.toISOString()}, ${to.toISOString()})`,
+    );
+
     try {
       const items = await this.findUpcomingItems(from, to);
-      if (items.length === 0) return;
-      this.logger.log(`Found ${items.length} upcoming item(s) to notify`);
+      this.logger.log(`cron tick: matched ${items.length} item(s)`);
       for (const item of items) {
         await this.notifyOne(item);
       }
