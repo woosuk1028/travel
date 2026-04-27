@@ -35,3 +35,6 @@ coverage/
 *.tsbuildinfo
 .eslintcache
 .turbo/
+
+# uploaded files
+nest/uploads/
