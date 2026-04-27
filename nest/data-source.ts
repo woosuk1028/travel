@@ -4,6 +4,8 @@ import { DataSource } from 'typeorm';
 import { Expense } from './src/expenses/expense.entity';
 import { Photo } from './src/photos/photo.entity';
 import { Place } from './src/places/place.entity';
+import { PushNotificationLog } from './src/push/push-notification-log.entity';
+import { PushSubscriptionEntity } from './src/push/push-subscription.entity';
 import { Trip } from './src/trips/trip.entity';
 import { User } from './src/users/user.entity';
 
@@ -15,7 +17,15 @@ export default new DataSource({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
   charset: 'utf8mb4',
-  entities: [User, Trip, Place, Expense, Photo],
+  entities: [
+    User,
+    Trip,
+    Place,
+    Expense,
+    Photo,
+    PushSubscriptionEntity,
+    PushNotificationLog,
+  ],
   migrations: ['src/migrations/*.ts'],
   migrationsTableName: 'typeorm_migrations',
 });
