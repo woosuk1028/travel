@@ -19,6 +19,12 @@ const CATEGORIES: { value: ExpenseCategory; label: string; icon: string }[] = [
   { value: "other", label: "기타", icon: "📌" },
 ];
 
+const CURRENCIES: { value: string; label: string }[] = [
+  { value: "KRW", label: "원 (KRW)" },
+  { value: "USD", label: "달러 (USD)" },
+  { value: "JPY", label: "엔 (JPY)" },
+];
+
 export function ExpenseForm({
   trip,
   places,
@@ -80,12 +86,17 @@ export function ExpenseForm({
         />
       </Field>
       <Field label="통화">
-        <input
+        <select
           value={currency}
-          onChange={(e) => setCurrency(e.target.value.toUpperCase())}
-          maxLength={8}
+          onChange={(e) => setCurrency(e.target.value)}
           className={formInputClass}
-        />
+        >
+          {CURRENCIES.map((c) => (
+            <option key={c.value} value={c.value}>
+              {c.label}
+            </option>
+          ))}
+        </select>
       </Field>
       <Field label="카테고리" className="sm:col-span-2">
         <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
