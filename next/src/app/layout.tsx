@@ -1,6 +1,7 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Nav } from "@/components/Nav";
+import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 import { AuthProvider } from "@/lib/auth";
 import "./globals.css";
 
@@ -17,6 +18,24 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "여행 일지",
   description: "여행 일정·장소·지출·사진을 한 곳에서 기록",
+  applicationName: "여행 일지",
+  appleWebApp: {
+    capable: true,
+    title: "여행 일지",
+    statusBarStyle: "default",
+  },
+  formatDetection: { telephone: false },
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#6366F1" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+  ],
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
@@ -36,6 +55,7 @@ export default function RootLayout({
             {children}
           </main>
         </AuthProvider>
+        <ServiceWorkerRegister />
       </body>
     </html>
   );
