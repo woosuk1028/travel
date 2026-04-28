@@ -16,12 +16,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "여행 일지",
+  title: "TripLog",
   description: "여행 일정·장소·지출·사진을 한 곳에서 기록",
-  applicationName: "여행 일지",
+  applicationName: "TripLog",
   appleWebApp: {
     capable: true,
-    title: "여행 일지",
+    title: "TripLog",
     statusBarStyle: "default",
   },
   formatDetection: { telephone: false },

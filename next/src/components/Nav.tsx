@@ -17,7 +17,7 @@ export function Nav() {
           className="flex items-center gap-2 text-base font-semibold tracking-tight"
         >
           <span className="text-xl">✈️</span>
-          <span>여행 일지</span>
+          <span>TripLog</span>
         </Link>
         <nav className="flex items-center gap-3 text-sm">
           {user ? (
