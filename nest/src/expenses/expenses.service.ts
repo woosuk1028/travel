@@ -16,7 +16,7 @@ export class ExpensesService {
   ) {}
 
   async list(userId: number, tripId: number) {
-    await this.tripsService.findOneByUser(userId, tripId);
+    await this.tripsService.assertAccessible(userId, tripId);
     return this.expenses.find({
       where: { tripId },
       order: { paidAt: 'DESC', id: 'DESC' },
@@ -24,14 +24,14 @@ export class ExpensesService {
   }
 
   async findOne(userId: number, tripId: number, id: number) {
-    await this.tripsService.findOneByUser(userId, tripId);
+    await this.tripsService.assertAccessible(userId, tripId);
     const expense = await this.expenses.findOne({ where: { id, tripId } });
     if (!expense) throw new NotFoundException('Expense not found');
     return expense;
   }
 
   async create(userId: number, tripId: number, dto: CreateExpenseDto) {
-    await this.tripsService.findOneByUser(userId, tripId);
+    await this.tripsService.assertOwner(userId, tripId);
     if (dto.placeId) {
       await this.placesService.assertBelongsToTrip(tripId, dto.placeId);
     }
@@ -53,7 +53,9 @@ export class ExpensesService {
     id: number,
     dto: UpdateExpenseDto,
   ) {
-    const expense = await this.findOne(userId, tripId, id);
+    await this.tripsService.assertOwner(userId, tripId);
+    const expense = await this.expenses.findOne({ where: { id, tripId } });
+    if (!expense) throw new NotFoundException('Expense not found');
     if (dto.placeId !== undefined && dto.placeId !== null) {
       await this.placesService.assertBelongsToTrip(tripId, dto.placeId);
     }
@@ -68,7 +70,9 @@ export class ExpensesService {
   }
 
   async remove(userId: number, tripId: number, id: number) {
-    const expense = await this.findOne(userId, tripId, id);
+    await this.tripsService.assertOwner(userId, tripId);
+    const expense = await this.expenses.findOne({ where: { id, tripId } });
+    if (!expense) throw new NotFoundException('Expense not found');
     await this.expenses.remove(expense);
     return { id };
   }

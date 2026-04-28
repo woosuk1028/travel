@@ -6,6 +6,7 @@ import { Photo } from './src/photos/photo.entity';
 import { Place } from './src/places/place.entity';
 import { PushNotificationLog } from './src/push/push-notification-log.entity';
 import { PushSubscriptionEntity } from './src/push/push-subscription.entity';
+import { TripMember } from './src/trips/trip-member.entity';
 import { Trip } from './src/trips/trip.entity';
 import { User } from './src/users/user.entity';
 
@@ -21,6 +22,7 @@ export default new DataSource({
   entities: [
     User,
     Trip,
+    TripMember,
     Place,
     Expense,
     Photo,

@@ -35,6 +35,10 @@ export class Trip {
   @Column({ type: 'text', nullable: true })
   description?: string | null;
 
+  @Index({ unique: true })
+  @Column({ name: 'share_code', type: 'varchar', length: 16, nullable: true })
+  shareCode?: string | null;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt!: Date;
 

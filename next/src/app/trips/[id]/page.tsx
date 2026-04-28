@@ -6,6 +6,7 @@ import { ExpenseForm } from "@/components/trip/ExpenseForm";
 import { Feed } from "@/components/trip/Feed";
 import { PhotoForm } from "@/components/trip/PhotoForm";
 import { PlaceForm } from "@/components/trip/PlaceForm";
+import { SharePanel } from "@/components/trip/SharePanel";
 import { TripHeader } from "@/components/trip/TripHeader";
 import { api, ApiError } from "@/lib/api";
 import { useRequireAuth } from "@/lib/auth";
@@ -74,37 +75,50 @@ export default function TripDetailPage() {
     void refreshAll();
   }
 
+  const isOwner = trip.role === "owner";
+
   return (
     <article className="flex flex-col gap-6">
       <TripHeader trip={trip} onChanged={setTrip} />
 
-      <AddBar
-        openForm={openForm}
-        onToggle={(k) => setOpenForm((cur) => (cur === k ? null : k))}
-      />
+      {isOwner && (
+        <SharePanel
+          trip={trip}
+          onCodeChanged={(code) => setTrip({ ...trip, shareCode: code })}
+        />
+      )}
 
-      {openForm === "place" && (
-        <PlaceForm
-          trip={trip}
-          onSaved={onCreated}
-          onCancel={() => setOpenForm(null)}
-        />
-      )}
-      {openForm === "expense" && (
-        <ExpenseForm
-          trip={trip}
-          places={places}
-          onSaved={onCreated}
-          onCancel={() => setOpenForm(null)}
-        />
-      )}
-      {openForm === "photo" && (
-        <PhotoForm
-          trip={trip}
-          places={places}
-          onSaved={onCreated}
-          onCancel={() => setOpenForm(null)}
-        />
+      {isOwner && (
+        <>
+          <AddBar
+            openForm={openForm}
+            onToggle={(k) => setOpenForm((cur) => (cur === k ? null : k))}
+          />
+
+          {openForm === "place" && (
+            <PlaceForm
+              trip={trip}
+              onSaved={onCreated}
+              onCancel={() => setOpenForm(null)}
+            />
+          )}
+          {openForm === "expense" && (
+            <ExpenseForm
+              trip={trip}
+              places={places}
+              onSaved={onCreated}
+              onCancel={() => setOpenForm(null)}
+            />
+          )}
+          {openForm === "photo" && (
+            <PhotoForm
+              trip={trip}
+              places={places}
+              onSaved={onCreated}
+              onCancel={() => setOpenForm(null)}
+            />
+          )}
+        </>
       )}
 
       <Feed
@@ -112,6 +126,7 @@ export default function TripDetailPage() {
         places={places}
         expenses={expenses}
         photos={photos}
+        canWrite={isOwner}
         onChanged={refreshAll}
       />
     </article>

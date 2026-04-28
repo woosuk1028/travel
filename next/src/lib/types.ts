@@ -9,6 +9,8 @@ export type AuthResponse = {
   user: User;
 };
 
+export type TripRole = "owner" | "member";
+
 export type Trip = {
   id: number;
   userId: number;
@@ -16,8 +18,18 @@ export type Trip = {
   startDate: string;
   endDate: string;
   description?: string | null;
+  shareCode?: string | null;
+  role: TripRole;
   createdAt: string;
   updatedAt: string;
+};
+
+export type TripMember = {
+  id: number;
+  userId: number;
+  email?: string;
+  name?: string;
+  joinedAt: string;
 };
 
 export type Place = {

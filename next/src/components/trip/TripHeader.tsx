@@ -32,7 +32,19 @@ export function TripHeader({
     }
   }
 
-  if (editing) {
+  async function handleLeave() {
+    if (!confirm("이 여행에서 나가시겠습니까?")) return;
+    try {
+      await api.del(`/trips/${trip.id}/leave`);
+      router.replace("/trips");
+    } catch (err) {
+      alert((err as ApiError).message);
+    }
+  }
+
+  const isOwner = trip.role === "owner";
+
+  if (editing && isOwner) {
     return (
       <EditForm
         trip={trip}
@@ -60,22 +72,39 @@ export function TripHeader({
           </p>
         </div>
         <div className="flex shrink-0 gap-2">
-          <button
-            type="button"
-            onClick={() => setEditing(true)}
-            className="rounded-md border border-white/30 bg-white/10 px-3 py-1.5 text-sm text-white backdrop-blur transition hover:bg-white/20"
-          >
-            수정
-          </button>
-          <button
-            type="button"
-            onClick={handleDelete}
-            className="rounded-md border border-white/30 bg-white/10 px-3 py-1.5 text-sm text-white backdrop-blur transition hover:bg-red-500/40"
-          >
-            삭제
-          </button>
+          {isOwner ? (
+            <>
+              <button
+                type="button"
+                onClick={() => setEditing(true)}
+                className="rounded-md border border-white/30 bg-white/10 px-3 py-1.5 text-sm text-white backdrop-blur transition hover:bg-white/20"
+              >
+                수정
+              </button>
+              <button
+                type="button"
+                onClick={handleDelete}
+                className="rounded-md border border-white/30 bg-white/10 px-3 py-1.5 text-sm text-white backdrop-blur transition hover:bg-red-500/40"
+              >
+                삭제
+              </button>
+            </>
+          ) : (
+            <button
+              type="button"
+              onClick={handleLeave}
+              className="rounded-md border border-white/30 bg-white/10 px-3 py-1.5 text-sm text-white backdrop-blur transition hover:bg-red-500/40"
+            >
+              나가기
+            </button>
+          )}
         </div>
       </div>
+      {!isOwner && (
+        <span className="mt-2 inline-flex w-fit items-center gap-1 rounded-full bg-white/20 px-2 py-0.5 text-xs font-medium text-white">
+          🔗 공유받은 여행 (읽기 전용)
+        </span>
+      )}
       {trip.description && (
         <p className="mt-3 whitespace-pre-wrap text-sm text-indigo-50">
           {trip.description}

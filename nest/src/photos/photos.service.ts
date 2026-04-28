@@ -24,7 +24,7 @@ export class PhotosService {
   ) {}
 
   async list(userId: number, tripId: number) {
-    await this.tripsService.findOneByUser(userId, tripId);
+    await this.tripsService.assertAccessible(userId, tripId);
     return this.photos.find({
       where: { tripId },
       order: { takenAt: 'DESC', id: 'DESC' },
@@ -32,7 +32,7 @@ export class PhotosService {
   }
 
   async findOne(userId: number, tripId: number, id: number) {
-    await this.tripsService.findOneByUser(userId, tripId);
+    await this.tripsService.assertAccessible(userId, tripId);
     const photo = await this.photos.findOne({ where: { id, tripId } });
     if (!photo) throw new NotFoundException('Photo not found');
     return photo;
@@ -45,7 +45,7 @@ export class PhotosService {
     dto: UploadPhotoDto,
   ) {
     try {
-      await this.tripsService.findOneByUser(userId, tripId);
+      await this.tripsService.assertOwner(userId, tripId);
       if (dto.placeId) {
         await this.placesService.assertBelongsToTrip(tripId, dto.placeId);
       }
@@ -73,7 +73,9 @@ export class PhotosService {
     id: number,
     dto: UpdatePhotoDto,
   ) {
-    const photo = await this.findOne(userId, tripId, id);
+    await this.tripsService.assertOwner(userId, tripId);
+    const photo = await this.photos.findOne({ where: { id, tripId } });
+    if (!photo) throw new NotFoundException('Photo not found');
     if (dto.placeId !== undefined && dto.placeId !== null) {
       await this.placesService.assertBelongsToTrip(tripId, dto.placeId);
     }
@@ -85,7 +87,9 @@ export class PhotosService {
   }
 
   async remove(userId: number, tripId: number, id: number, uploadsRoot: string) {
-    const photo = await this.findOne(userId, tripId, id);
+    await this.tripsService.assertOwner(userId, tripId);
+    const photo = await this.photos.findOne({ where: { id, tripId } });
+    if (!photo) throw new NotFoundException('Photo not found');
     await this.photos.remove(photo);
     const filename = photo.filePath.replace(/^\/uploads\//, '');
     await this.deleteFile(join(uploadsRoot, filename));
