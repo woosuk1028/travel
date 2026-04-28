@@ -34,7 +34,7 @@ export default function LoginPage() {
         <div className="mb-3 text-4xl">🔑</div>
         <h1 className="text-2xl font-semibold tracking-tight">로그인</h1>
         <p className="mt-1 text-sm text-zinc-500">
-          여행 일지에 다시 오신 것을 환영합니다.
+          TripLog에 다시 오신 것을 환영합니다.
         </p>
       </div>
       <form
