@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Nav } from "@/components/Nav";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
+import { UpdatePrompt } from "@/components/UpdatePrompt";
 import { AuthProvider } from "@/lib/auth";
 import "./globals.css";
 
@@ -58,6 +59,7 @@ export default function RootLayout({
           </main>
         </AuthProvider>
         <ServiceWorkerRegister />
+        <UpdatePrompt />
       </body>
     </html>
   );

@@ -1,5 +1,6 @@
-// Travel Log service worker — bump CACHE name to invalidate after deploys.
-const CACHE = "travel-cache-v2";
+// Travel Log service worker.
+// Bump CACHE version any time you want to force a fresh round of cache.
+const CACHE = "travel-cache-v3";
 const PRECACHE_URLS = ["/", "/login", "/signup", "/manifest.webmanifest"];
 
 self.addEventListener("install", (event) => {
@@ -8,7 +9,8 @@ self.addEventListener("install", (event) => {
       .open(CACHE)
       .then((cache) => cache.addAll(PRECACHE_URLS).catch(() => undefined)),
   );
-  self.skipWaiting();
+  // No skipWaiting() — wait until the client tells us to (so the user
+  // sees an "update available" prompt instead of a surprise reload).
 });
 
 self.addEventListener("activate", (event) => {
@@ -24,18 +26,22 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
+});
+
 self.addEventListener("fetch", (event) => {
   const req = event.request;
   if (req.method !== "GET") return;
 
   const url = new URL(req.url);
 
-  // Never cache API calls or uploads — those need fresh / are user-specific
+  // Never cache API calls or uploads
   if (url.pathname.startsWith("/api/") || url.pathname.startsWith("/uploads/")) {
     return;
   }
-
-  // Cross-origin: leave to the network
   if (url.origin !== self.location.origin) return;
 
   event.respondWith(
@@ -54,17 +60,17 @@ self.addEventListener("fetch", (event) => {
   );
 });
 
-// --- Web Push -----------------------------------------------------------
+// --- Web Push ---
 
 self.addEventListener("push", (event) => {
   let data = {};
   try {
     data = event.data ? event.data.json() : {};
   } catch (_e) {
-    data = { title: "여행 일지", body: event.data ? event.data.text() : "" };
+    data = { title: "TripLog", body: event.data ? event.data.text() : "" };
   }
 
-  const title = data.title || "여행 일지";
+  const title = data.title || "TripLog";
   const options = {
     body: data.body || "",
     icon: "/icon",
