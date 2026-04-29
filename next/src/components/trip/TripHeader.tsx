@@ -44,7 +44,7 @@ export function TripHeader({
 
   const isOwner = trip.role === "owner";
 
-  if (editing && isOwner) {
+  if (editing) {
     return (
       <EditForm
         trip={trip}
@@ -72,23 +72,21 @@ export function TripHeader({
           </p>
         </div>
         <div className="flex shrink-0 gap-2">
+          <button
+            type="button"
+            onClick={() => setEditing(true)}
+            className="rounded-md border border-white/30 bg-white/10 px-3 py-1.5 text-sm text-white backdrop-blur transition hover:bg-white/20"
+          >
+            수정
+          </button>
           {isOwner ? (
-            <>
-              <button
-                type="button"
-                onClick={() => setEditing(true)}
-                className="rounded-md border border-white/30 bg-white/10 px-3 py-1.5 text-sm text-white backdrop-blur transition hover:bg-white/20"
-              >
-                수정
-              </button>
-              <button
-                type="button"
-                onClick={handleDelete}
-                className="rounded-md border border-white/30 bg-white/10 px-3 py-1.5 text-sm text-white backdrop-blur transition hover:bg-red-500/40"
-              >
-                삭제
-              </button>
-            </>
+            <button
+              type="button"
+              onClick={handleDelete}
+              className="rounded-md border border-white/30 bg-white/10 px-3 py-1.5 text-sm text-white backdrop-blur transition hover:bg-red-500/40"
+            >
+              삭제
+            </button>
           ) : (
             <button
               type="button"
@@ -102,7 +100,7 @@ export function TripHeader({
       </div>
       {!isOwner && (
         <span className="mt-2 inline-flex w-fit items-center gap-1 rounded-full bg-white/20 px-2 py-0.5 text-xs font-medium text-white">
-          🔗 공유받은 여행 (읽기 전용)
+          🔗 공유받은 여행
         </span>
       )}
       {trip.description && (

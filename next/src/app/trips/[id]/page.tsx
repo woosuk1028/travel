@@ -88,37 +88,33 @@ export default function TripDetailPage() {
         />
       )}
 
-      {isOwner && (
-        <>
-          <AddBar
-            openForm={openForm}
-            onToggle={(k) => setOpenForm((cur) => (cur === k ? null : k))}
-          />
+      <AddBar
+        openForm={openForm}
+        onToggle={(k) => setOpenForm((cur) => (cur === k ? null : k))}
+      />
 
-          {openForm === "place" && (
-            <PlaceForm
-              trip={trip}
-              onSaved={onCreated}
-              onCancel={() => setOpenForm(null)}
-            />
-          )}
-          {openForm === "expense" && (
-            <ExpenseForm
-              trip={trip}
-              places={places}
-              onSaved={onCreated}
-              onCancel={() => setOpenForm(null)}
-            />
-          )}
-          {openForm === "photo" && (
-            <PhotoForm
-              trip={trip}
-              places={places}
-              onSaved={onCreated}
-              onCancel={() => setOpenForm(null)}
-            />
-          )}
-        </>
+      {openForm === "place" && (
+        <PlaceForm
+          trip={trip}
+          onSaved={onCreated}
+          onCancel={() => setOpenForm(null)}
+        />
+      )}
+      {openForm === "expense" && (
+        <ExpenseForm
+          trip={trip}
+          places={places}
+          onSaved={onCreated}
+          onCancel={() => setOpenForm(null)}
+        />
+      )}
+      {openForm === "photo" && (
+        <PhotoForm
+          trip={trip}
+          places={places}
+          onSaved={onCreated}
+          onCancel={() => setOpenForm(null)}
+        />
       )}
 
       <Feed
@@ -126,7 +122,6 @@ export default function TripDetailPage() {
         places={places}
         expenses={expenses}
         photos={photos}
-        canWrite={isOwner}
         onChanged={refreshAll}
       />
     </article>

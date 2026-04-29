@@ -31,7 +31,7 @@ export class ExpensesService {
   }
 
   async create(userId: number, tripId: number, dto: CreateExpenseDto) {
-    await this.tripsService.assertOwner(userId, tripId);
+    await this.tripsService.assertAccessible(userId, tripId);
     if (dto.placeId) {
       await this.placesService.assertBelongsToTrip(tripId, dto.placeId);
     }
@@ -53,7 +53,7 @@ export class ExpensesService {
     id: number,
     dto: UpdateExpenseDto,
   ) {
-    await this.tripsService.assertOwner(userId, tripId);
+    await this.tripsService.assertAccessible(userId, tripId);
     const expense = await this.expenses.findOne({ where: { id, tripId } });
     if (!expense) throw new NotFoundException('Expense not found');
     if (dto.placeId !== undefined && dto.placeId !== null) {
@@ -70,7 +70,7 @@ export class ExpensesService {
   }
 
   async remove(userId: number, tripId: number, id: number) {
-    await this.tripsService.assertOwner(userId, tripId);
+    await this.tripsService.assertAccessible(userId, tripId);
     const expense = await this.expenses.findOne({ where: { id, tripId } });
     if (!expense) throw new NotFoundException('Expense not found');
     await this.expenses.remove(expense);

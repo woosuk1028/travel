@@ -100,7 +100,9 @@ export class TripsService {
   }
 
   async update(userId: number, id: number, dto: UpdateTripDto) {
-    const trip = await this.findOneOwned(userId, id);
+    await this.findOneAccessible(userId, id);
+    const trip = await this.trips.findOne({ where: { id } });
+    if (!trip) throw new NotFoundException('Trip not found');
     const startDate = dto.startDate ?? trip.startDate;
     const endDate = dto.endDate ?? trip.endDate;
     this.assertDateRange(startDate, endDate);

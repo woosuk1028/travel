@@ -45,7 +45,7 @@ export class PhotosService {
     dto: UploadPhotoDto,
   ) {
     try {
-      await this.tripsService.assertOwner(userId, tripId);
+      await this.tripsService.assertAccessible(userId, tripId);
       if (dto.placeId) {
         await this.placesService.assertBelongsToTrip(tripId, dto.placeId);
       }
@@ -73,7 +73,7 @@ export class PhotosService {
     id: number,
     dto: UpdatePhotoDto,
   ) {
-    await this.tripsService.assertOwner(userId, tripId);
+    await this.tripsService.assertAccessible(userId, tripId);
     const photo = await this.photos.findOne({ where: { id, tripId } });
     if (!photo) throw new NotFoundException('Photo not found');
     if (dto.placeId !== undefined && dto.placeId !== null) {
@@ -87,7 +87,7 @@ export class PhotosService {
   }
 
   async remove(userId: number, tripId: number, id: number, uploadsRoot: string) {
-    await this.tripsService.assertOwner(userId, tripId);
+    await this.tripsService.assertAccessible(userId, tripId);
     const photo = await this.photos.findOne({ where: { id, tripId } });
     if (!photo) throw new NotFoundException('Photo not found');
     await this.photos.remove(photo);

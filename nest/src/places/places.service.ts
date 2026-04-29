@@ -29,7 +29,7 @@ export class PlacesService {
   }
 
   async create(userId: number, tripId: number, dto: CreatePlaceDto) {
-    await this.tripsService.assertOwner(userId, tripId);
+    await this.tripsService.assertAccessible(userId, tripId);
     const place = this.places.create({ ...dto, tripId });
     return this.places.save(place);
   }
@@ -40,7 +40,7 @@ export class PlacesService {
     id: number,
     dto: UpdatePlaceDto,
   ) {
-    await this.tripsService.assertOwner(userId, tripId);
+    await this.tripsService.assertAccessible(userId, tripId);
     const place = await this.places.findOne({ where: { id, tripId } });
     if (!place) throw new NotFoundException('Place not found');
     Object.assign(place, dto);
@@ -49,7 +49,7 @@ export class PlacesService {
   }
 
   async remove(userId: number, tripId: number, id: number) {
-    await this.tripsService.assertOwner(userId, tripId);
+    await this.tripsService.assertAccessible(userId, tripId);
     const place = await this.places.findOne({ where: { id, tripId } });
     if (!place) throw new NotFoundException('Place not found');
     await this.places.remove(place);
