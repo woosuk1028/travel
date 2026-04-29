@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# 한 번에 git pull → 의존성 설치 → 빌드 → PM2 재시작
+# 한 번에 의존성 설치 → 빌드 → PM2 재시작
+# (git pull 은 직접 수행한 뒤에 실행할 것)
 # 사용법: ./deploy.sh
 #
 # 전제: ecosystem.config.js 의 두 앱(travel-api, travel-web)이 이미 한 번이라도
@@ -11,9 +12,6 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$ROOT"
 
 log() { printf '\n\033[1;36m[deploy]\033[0m %s\n' "$*"; }
-
-log "git pull (현재 브랜치)"
-git pull --ff-only
 
 log "nest: npm ci"
 ( cd nest && npm ci )
