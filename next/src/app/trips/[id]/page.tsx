@@ -2,6 +2,7 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+import { BudgetPanel } from "@/components/trip/BudgetPanel";
 import { ExpenseForm } from "@/components/trip/ExpenseForm";
 import { Feed } from "@/components/trip/Feed";
 import { PhotoForm } from "@/components/trip/PhotoForm";
@@ -87,6 +88,8 @@ export default function TripDetailPage() {
           onCodeChanged={(code) => setTrip({ ...trip, shareCode: code })}
         />
       )}
+
+      <BudgetPanel trip={trip} expenses={expenses} />
 
       <AddBar
         openForm={openForm}

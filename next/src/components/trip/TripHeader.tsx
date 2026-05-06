@@ -135,6 +135,8 @@ function EditForm({
   const [startDate, setStartDate] = useState(trip.startDate);
   const [endDate, setEndDate] = useState(trip.endDate);
   const [description, setDescription] = useState(trip.description ?? "");
+  const [budget, setBudget] = useState(trip.budget ?? "");
+  const [budgetCurrency, setBudgetCurrency] = useState(trip.budgetCurrency);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -148,6 +150,8 @@ function EditForm({
         startDate,
         endDate,
         description: description || null,
+        budget: budget ? budget : null,
+        budgetCurrency,
       });
       onSaved(updated);
     } catch (err) {
@@ -185,6 +189,26 @@ function EditForm({
           onChange={(e) => setEndDate(e.target.value)}
           className={formInputClass}
         />
+      </Field>
+      <Field label="예산" optional>
+        <input
+          inputMode="decimal"
+          value={budget ?? ""}
+          onChange={(e) => setBudget(e.target.value)}
+          placeholder="0"
+          className={formInputClass}
+        />
+      </Field>
+      <Field label="통화">
+        <select
+          value={budgetCurrency}
+          onChange={(e) => setBudgetCurrency(e.target.value)}
+          className={formInputClass}
+        >
+          <option value="KRW">원 (KRW)</option>
+          <option value="USD">달러 (USD)</option>
+          <option value="JPY">엔 (JPY)</option>
+        </select>
       </Field>
       <Field label="설명" optional className="sm:col-span-2">
         <textarea

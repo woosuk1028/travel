@@ -1,10 +1,14 @@
 import {
   IsDateString,
+  IsIn,
+  IsNumberString,
   IsOptional,
   IsString,
   MaxLength,
   MinLength,
 } from 'class-validator';
+
+export const TRIP_CURRENCIES = ['KRW', 'USD', 'JPY'] as const;
 
 export class CreateTripDto {
   @IsString()
@@ -22,4 +26,12 @@ export class CreateTripDto {
   @IsString()
   @MaxLength(5000)
   description?: string;
+
+  @IsOptional()
+  @IsNumberString()
+  budget?: string;
+
+  @IsOptional()
+  @IsIn(TRIP_CURRENCIES as readonly string[])
+  budgetCurrency?: string;
 }

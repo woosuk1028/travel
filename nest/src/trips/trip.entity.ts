@@ -39,6 +39,17 @@ export class Trip {
   @Column({ name: 'share_code', type: 'varchar', length: 16, nullable: true })
   shareCode?: string | null;
 
+  @Column({ type: 'decimal', precision: 14, scale: 2, nullable: true })
+  budget?: string | null;
+
+  @Column({
+    name: 'budget_currency',
+    type: 'varchar',
+    length: 8,
+    default: 'KRW',
+  })
+  budgetCurrency!: string;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt!: Date;
 

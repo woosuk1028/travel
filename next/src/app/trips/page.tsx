@@ -141,6 +141,8 @@ function CreateTripForm({ onCreated }: { onCreated: () => void }) {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [description, setDescription] = useState("");
+  const [budget, setBudget] = useState("");
+  const [budgetCurrency, setBudgetCurrency] = useState("KRW");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -154,6 +156,8 @@ function CreateTripForm({ onCreated }: { onCreated: () => void }) {
         startDate,
         endDate,
         description: description || undefined,
+        budget: budget ? budget : undefined,
+        budgetCurrency,
       });
       onCreated();
     } catch (err) {
@@ -198,6 +202,30 @@ function CreateTripForm({ onCreated }: { onCreated: () => void }) {
           onChange={(e) => setEndDate(e.target.value)}
           className="w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-zinc-700 dark:bg-zinc-950"
         />
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="text-zinc-700 dark:text-zinc-300">
+          예산 <span className="text-xs text-zinc-400">(선택)</span>
+        </span>
+        <input
+          inputMode="decimal"
+          value={budget}
+          onChange={(e) => setBudget(e.target.value)}
+          placeholder="0"
+          className="w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-zinc-700 dark:bg-zinc-950"
+        />
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="text-zinc-700 dark:text-zinc-300">통화</span>
+        <select
+          value={budgetCurrency}
+          onChange={(e) => setBudgetCurrency(e.target.value)}
+          className="w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-zinc-700 dark:bg-zinc-950"
+        >
+          <option value="KRW">원 (KRW)</option>
+          <option value="USD">달러 (USD)</option>
+          <option value="JPY">엔 (JPY)</option>
+        </select>
       </label>
       <label className="flex flex-col gap-1.5 text-sm sm:col-span-2">
         <span className="text-zinc-700 dark:text-zinc-300">

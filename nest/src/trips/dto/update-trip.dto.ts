@@ -1,10 +1,14 @@
 import {
   IsDateString,
+  IsIn,
+  IsNumberString,
   IsOptional,
   IsString,
   MaxLength,
   MinLength,
+  ValidateIf,
 } from 'class-validator';
+import { TRIP_CURRENCIES } from './create-trip.dto';
 
 export class UpdateTripDto {
   @IsOptional()
@@ -25,4 +29,13 @@ export class UpdateTripDto {
   @IsString()
   @MaxLength(5000)
   description?: string;
+
+  @IsOptional()
+  @ValidateIf((_o, v) => v !== null)
+  @IsNumberString()
+  budget?: string | null;
+
+  @IsOptional()
+  @IsIn(TRIP_CURRENCIES as readonly string[])
+  budgetCurrency?: string;
 }

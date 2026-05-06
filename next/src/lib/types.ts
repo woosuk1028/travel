@@ -19,10 +19,18 @@ export type Trip = {
   endDate: string;
   description?: string | null;
   shareCode?: string | null;
+  budget?: string | null;
+  budgetCurrency: string;
   role: TripRole;
   createdAt: string;
   updatedAt: string;
 };
+
+export const TRIP_CURRENCIES: readonly { value: string; label: string }[] = [
+  { value: "KRW", label: "원 (KRW)" },
+  { value: "USD", label: "달러 (USD)" },
+  { value: "JPY", label: "엔 (JPY)" },
+];
 
 export type TripMember = {
   id: number;
