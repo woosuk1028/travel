@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Footer } from "@/components/Footer";
 import { Nav } from "@/components/Nav";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 import { UpdatePrompt } from "@/components/UpdatePrompt";
@@ -57,6 +58,7 @@ export default function RootLayout({
           <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-6 sm:px-6 sm:py-8">
             {children}
           </main>
+          <Footer />
         </AuthProvider>
         <ServiceWorkerRegister />
         <UpdatePrompt />
