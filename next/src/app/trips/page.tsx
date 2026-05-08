@@ -2,10 +2,12 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useCallback, useEffect, useState } from "react";
 import { api, ApiError } from "@/lib/api";
 import { useRequireAuth } from "@/lib/auth";
 import type { Trip } from "@/lib/types";
+
+const POLL_INTERVAL_MS = 10_000;
 
 export default function TripsPage() {
   const router = useRouter();
@@ -15,18 +17,28 @@ export default function TripsPage() {
   const [showForm, setShowForm] = useState(false);
   const [showJoin, setShowJoin] = useState(false);
 
-  async function refresh() {
+  const refresh = useCallback(async () => {
     try {
       const list = await api.get<Trip[]>("/trips");
       setTrips(list);
     } catch (err) {
       setError((err as ApiError).message);
     }
-  }
+  }, []);
 
   useEffect(() => {
-    if (user) void refresh();
-  }, [user]);
+    if (!user) return;
+    void refresh();
+    const interval = setInterval(refresh, POLL_INTERVAL_MS);
+    const onVisible = () => {
+      if (document.visibilityState === "visible") void refresh();
+    };
+    document.addEventListener("visibilitychange", onVisible);
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener("visibilitychange", onVisible);
+    };
+  }, [user, refresh]);
 
   if (authLoading || !user) return <p className="text-zinc-500">로딩중...</p>;
 
@@ -114,6 +126,7 @@ export default function TripsPage() {
           </button>
         )
       ) : (
+        <>
         <ul className="grid gap-3 sm:grid-cols-2">
           {trips.map((trip) => (
             <li key={trip.id}>
@@ -144,6 +157,20 @@ export default function TripsPage() {
             </li>
           ))}
         </ul>
+        {!showForm && (
+          <button
+            type="button"
+            onClick={() => {
+              setShowForm(true);
+              setShowJoin(false);
+            }}
+            className="flex items-center justify-center gap-2 rounded-xl border-2 border-dashed border-indigo-300 bg-white px-4 py-6 text-base font-medium text-indigo-700 transition hover:-translate-y-0.5 hover:border-indigo-500 hover:bg-indigo-50 hover:shadow-md dark:border-indigo-800 dark:bg-zinc-900 dark:text-indigo-300 dark:hover:border-indigo-500 dark:hover:bg-indigo-950"
+          >
+            <span className="text-xl">✈️</span>
+            <span>+ 새 여행 만들기</span>
+          </button>
+        )}
+        </>
       )}
     </section>
   );

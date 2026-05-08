@@ -48,7 +48,17 @@ export default function TripDetailPage() {
   }, [tripId]);
 
   useEffect(() => {
-    if (user) void refreshAll();
+    if (!user) return;
+    void refreshAll();
+    const interval = setInterval(refreshAll, 10_000);
+    const onVisible = () => {
+      if (document.visibilityState === "visible") void refreshAll();
+    };
+    document.addEventListener("visibilitychange", onVisible);
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener("visibilitychange", onVisible);
+    };
   }, [user, refreshAll]);
 
   if (authLoading || !user) return <p className="text-zinc-500">로딩중...</p>;
