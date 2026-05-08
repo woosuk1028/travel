@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { ImageModal } from "@/components/ImageModal";
 import { api, API_BASE_URL, ApiError } from "@/lib/api";
 import { dayKey, formatDayHeader, formatTimeShort } from "@/lib/datetime";
 import type { Expense, Photo, Place, Trip } from "@/lib/types";
@@ -39,6 +40,7 @@ export function Feed({
   onChanged: () => void;
 }) {
   const [editingKey, setEditingKey] = useState<string | null>(null);
+  const [openPhoto, setOpenPhoto] = useState<Photo | null>(null);
 
   const groups = useMemo(() => {
     const fallback = `${trip.startDate}T00:00:00`;
@@ -127,6 +129,7 @@ export function Feed({
                   placesById={placesById}
                   tripId={trip.id}
                   onEdit={() => setEditingKey(it.key)}
+                  onOpenPhoto={setOpenPhoto}
                   onChanged={onChanged}
                 />
               ),
@@ -134,6 +137,15 @@ export function Feed({
           </ul>
         </section>
       ))}
+
+      {openPhoto && (
+        <ImageModal
+          src={`${API_BASE_URL}${openPhoto.filePath}`}
+          alt={openPhoto.caption ?? openPhoto.originalName}
+          caption={openPhoto.caption}
+          onClose={() => setOpenPhoto(null)}
+        />
+      )}
     </div>
   );
 }
@@ -188,12 +200,14 @@ function FeedRow({
   placesById,
   tripId,
   onEdit,
+  onOpenPhoto,
   onChanged,
 }: {
   item: FeedItem;
   placesById: Map<number, Place>;
   tripId: number;
   onEdit: () => void;
+  onOpenPhoto: (photo: Photo) => void;
   onChanged: () => void;
 }) {
   async function handleDelete() {
@@ -250,6 +264,7 @@ function FeedRow({
                 ? placesById.get(item.data.placeId)?.name ?? null
                 : null
             }
+            onOpen={() => onOpenPhoto(item.data)}
           />
         )}
       </div>
@@ -350,25 +365,27 @@ function ExpenseCard({
 function PhotoCard({
   photo,
   placeName,
+  onOpen,
 }: {
   photo: Photo;
   placeName: string | null;
+  onOpen: () => void;
 }) {
   return (
     <div className="flex gap-3">
-      <a
-        href={`${API_BASE_URL}${photo.filePath}`}
-        target="_blank"
-        rel="noopener noreferrer"
+      <button
+        type="button"
+        onClick={onOpen}
         className="block shrink-0"
+        aria-label="크게 보기"
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={`${API_BASE_URL}${photo.filePath}`}
           alt={photo.caption ?? photo.originalName}
-          className="h-20 w-20 rounded-md object-cover"
+          className="h-20 w-20 rounded-md object-cover transition hover:opacity-80"
         />
-      </a>
+      </button>
       <div className="min-w-0 flex-1 self-center">
         <p className="truncate text-sm font-medium">
           {photo.caption ?? photo.originalName}

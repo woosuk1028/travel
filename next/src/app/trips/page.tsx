@@ -49,20 +49,22 @@ export default function TripsPage() {
           >
             🔗 코드로 참여
           </button>
-          <button
-            type="button"
-            onClick={() => {
-              setShowForm((v) => !v);
-              setShowJoin(false);
-            }}
-            className={`rounded-md px-4 py-2 text-sm font-medium transition ${
-              showForm
-                ? "border border-zinc-300 dark:border-zinc-700"
-                : "bg-indigo-600 text-white hover:bg-indigo-700"
-            }`}
-          >
-            {showForm ? "취소" : "+ 새 여행"}
-          </button>
+          {trips !== null && trips.length > 0 && (
+            <button
+              type="button"
+              onClick={() => {
+                setShowForm((v) => !v);
+                setShowJoin(false);
+              }}
+              className={`rounded-md px-4 py-2 text-sm font-medium transition ${
+                showForm
+                  ? "border border-zinc-300 dark:border-zinc-700"
+                  : "bg-indigo-600 text-white hover:bg-indigo-700"
+              }`}
+            >
+              {showForm ? "취소" : "+ 새 여행"}
+            </button>
+          )}
         </div>
       </header>
 
@@ -93,13 +95,24 @@ export default function TripsPage() {
       {trips === null ? (
         <p className="text-zinc-500">불러오는 중...</p>
       ) : trips.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-zinc-300 bg-white p-12 text-center dark:border-zinc-700 dark:bg-zinc-900">
-          <div className="text-5xl">✈️</div>
-          <p className="mt-4 text-zinc-500">아직 등록된 여행이 없습니다.</p>
-          <p className="mt-1 text-sm text-zinc-400">
-            위의 &quot;+ 새 여행&quot;을 눌러 시작해보세요.
-          </p>
-        </div>
+        showForm ? null : (
+          <button
+            type="button"
+            onClick={() => {
+              setShowForm(true);
+              setShowJoin(false);
+            }}
+            className="flex flex-col items-center gap-3 rounded-2xl border-2 border-dashed border-indigo-300 bg-white p-12 text-center transition hover:-translate-y-0.5 hover:border-indigo-500 hover:bg-indigo-50 hover:shadow-md dark:border-indigo-800 dark:bg-zinc-900 dark:hover:border-indigo-500 dark:hover:bg-indigo-950"
+          >
+            <span className="text-5xl">✈️</span>
+            <span className="text-xl font-semibold text-indigo-700 dark:text-indigo-300">
+              + 새 여행 만들기
+            </span>
+            <span className="text-sm text-zinc-500">
+              첫 여행 일정을 등록해보세요.
+            </span>
+          </button>
+        )
       ) : (
         <ul className="grid gap-3 sm:grid-cols-2">
           {trips.map((trip) => (
