@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
+import { DatePickerField } from "@/components/DatePickerField";
 import { api, ApiError } from "@/lib/api";
 import type { Trip } from "@/lib/types";
 import { Field, formCardClass, FormFooter, formInputClass } from "./formBits";
@@ -173,21 +174,20 @@ function EditForm({
         />
       </Field>
       <Field label="시작일">
-        <input
-          type="date"
-          required
+        <DatePickerField
           value={startDate}
-          onChange={(e) => setStartDate(e.target.value)}
-          className={formInputClass}
+          onChange={(v) => {
+            setStartDate(v);
+            if (endDate && v > endDate) setEndDate(v);
+          }}
+          max={endDate || undefined}
         />
       </Field>
       <Field label="종료일">
-        <input
-          type="date"
-          required
+        <DatePickerField
           value={endDate}
-          onChange={(e) => setEndDate(e.target.value)}
-          className={formInputClass}
+          onChange={setEndDate}
+          min={startDate || undefined}
         />
       </Field>
       <Field label="예산" optional>

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useCallback, useEffect, useState } from "react";
+import { DatePickerField } from "@/components/DatePickerField";
 import { api, ApiError } from "@/lib/api";
 import { useRequireAuth } from "@/lib/auth";
 import type { Trip } from "@/lib/types";
@@ -264,26 +265,25 @@ function CreateTripForm({ onCreated }: { onCreated: () => void }) {
           className="w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm placeholder:text-zinc-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-zinc-700 dark:bg-zinc-950"
         />
       </label>
-      <label className="flex flex-col gap-1.5 text-sm">
+      <div className="flex flex-col gap-1.5 text-sm">
         <span className="text-zinc-700 dark:text-zinc-300">시작일</span>
-        <input
-          type="date"
-          required
+        <DatePickerField
           value={startDate}
-          onChange={(e) => setStartDate(e.target.value)}
-          className="w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-zinc-700 dark:bg-zinc-950"
+          onChange={(v) => {
+            setStartDate(v);
+            if (endDate && v > endDate) setEndDate(v);
+          }}
+          max={endDate || undefined}
         />
-      </label>
-      <label className="flex flex-col gap-1.5 text-sm">
+      </div>
+      <div className="flex flex-col gap-1.5 text-sm">
         <span className="text-zinc-700 dark:text-zinc-300">종료일</span>
-        <input
-          type="date"
-          required
+        <DatePickerField
           value={endDate}
-          onChange={(e) => setEndDate(e.target.value)}
-          className="w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-zinc-700 dark:bg-zinc-950"
+          onChange={setEndDate}
+          min={startDate || undefined}
         />
-      </label>
+      </div>
       <label className="flex flex-col gap-1.5 text-sm">
         <span className="text-zinc-700 dark:text-zinc-300">
           예산 <span className="text-xs text-zinc-400">(선택)</span>
