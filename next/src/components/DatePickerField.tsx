@@ -30,12 +30,14 @@ export function DatePickerField({
   min,
   max,
   placeholder = "날짜 선택",
+  inline = false,
 }: {
   value: string;
   onChange: (next: string) => void;
   min?: string;
   max?: string;
   placeholder?: string;
+  inline?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -98,9 +100,79 @@ export function DatePickerField({
 
   function pick(day: number) {
     if (isDisabled(day)) return;
-    // Close first so any re-render triggered by onChange can't reopen
-    setOpen(false);
+    if (!inline) setOpen(false);
     onChange(ymd(view.y, view.m, day));
+  }
+
+  const calendar = (
+    <div className="rounded-lg border border-zinc-200 bg-white p-3 dark:border-zinc-800 dark:bg-zinc-900">
+      <div className="mb-2 flex items-center justify-between">
+        <button
+          type="button"
+          onClick={prevMonth}
+          aria-label="이전 달"
+          className="flex h-8 w-8 items-center justify-center rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800"
+        >
+          ‹
+        </button>
+        <span className="text-sm font-medium">
+          {view.y}년 {view.m + 1}월
+        </span>
+        <button
+          type="button"
+          onClick={nextMonth}
+          aria-label="다음 달"
+          className="flex h-8 w-8 items-center justify-center rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800"
+        >
+          ›
+        </button>
+      </div>
+
+      <div className="grid grid-cols-7 gap-0.5 text-center text-[11px]">
+        {WEEKDAYS.map((w, i) => (
+          <div
+            key={w}
+            className={`py-1 ${
+              i === 0
+                ? "text-red-500"
+                : i === 6
+                  ? "text-blue-500"
+                  : "text-zinc-500"
+            }`}
+          >
+            {w}
+          </div>
+        ))}
+        {cells.map((day, i) =>
+          day === null ? (
+            <div key={i} />
+          ) : (
+            <button
+              key={i}
+              type="button"
+              disabled={isDisabled(day)}
+              onClick={(e) => {
+                e.stopPropagation();
+                pick(day);
+              }}
+              className={`flex h-9 items-center justify-center rounded-md text-sm transition ${
+                ymd(view.y, view.m, day) === value
+                  ? "bg-indigo-600 text-white"
+                  : isDisabled(day)
+                    ? "text-zinc-300 dark:text-zinc-700"
+                    : "hover:bg-indigo-50 dark:hover:bg-indigo-950"
+              }`}
+            >
+              {day}
+            </button>
+          ),
+        )}
+      </div>
+    </div>
+  );
+
+  if (inline) {
+    return calendar;
   }
 
   return (
@@ -118,69 +190,8 @@ export function DatePickerField({
       </button>
 
       {open && (
-        <div className="absolute left-0 right-0 top-full z-30 mt-1 rounded-lg border border-zinc-200 bg-white p-3 shadow-lg dark:border-zinc-800 dark:bg-zinc-900">
-          <div className="mb-2 flex items-center justify-between">
-            <button
-              type="button"
-              onClick={prevMonth}
-              aria-label="이전 달"
-              className="flex h-8 w-8 items-center justify-center rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800"
-            >
-              ‹
-            </button>
-            <span className="text-sm font-medium">
-              {view.y}년 {view.m + 1}월
-            </span>
-            <button
-              type="button"
-              onClick={nextMonth}
-              aria-label="다음 달"
-              className="flex h-8 w-8 items-center justify-center rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800"
-            >
-              ›
-            </button>
-          </div>
-
-          <div className="grid grid-cols-7 gap-0.5 text-center text-[11px]">
-            {WEEKDAYS.map((w, i) => (
-              <div
-                key={w}
-                className={`py-1 ${
-                  i === 0
-                    ? "text-red-500"
-                    : i === 6
-                      ? "text-blue-500"
-                      : "text-zinc-500"
-                }`}
-              >
-                {w}
-              </div>
-            ))}
-            {cells.map((day, i) =>
-              day === null ? (
-                <div key={i} />
-              ) : (
-                <button
-                  key={i}
-                  type="button"
-                  disabled={isDisabled(day)}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    pick(day);
-                  }}
-                  className={`flex h-9 items-center justify-center rounded-md text-sm transition ${
-                    ymd(view.y, view.m, day) === value
-                      ? "bg-indigo-600 text-white"
-                      : isDisabled(day)
-                        ? "text-zinc-300 dark:text-zinc-700"
-                        : "hover:bg-indigo-50 dark:hover:bg-indigo-950"
-                  }`}
-                >
-                  {day}
-                </button>
-              ),
-            )}
-          </div>
+        <div className="absolute left-0 right-0 top-full z-30 mt-1 shadow-lg">
+          {calendar}
         </div>
       )}
     </div>
