@@ -97,8 +97,10 @@ export function DatePickerField({
   }
 
   function pick(day: number) {
-    onChange(ymd(view.y, view.m, day));
+    if (isDisabled(day)) return;
+    // Close first so any re-render triggered by onChange can't reopen
     setOpen(false);
+    onChange(ymd(view.y, view.m, day));
   }
 
   return (
@@ -162,7 +164,10 @@ export function DatePickerField({
                   key={i}
                   type="button"
                   disabled={isDisabled(day)}
-                  onClick={() => pick(day)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    pick(day);
+                  }}
                   className={`flex h-9 items-center justify-center rounded-md text-sm transition ${
                     ymd(view.y, view.m, day) === value
                       ? "bg-indigo-600 text-white"
