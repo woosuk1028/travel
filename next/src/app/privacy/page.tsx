@@ -6,7 +6,7 @@ export const metadata: Metadata = {
 
 const SERVICE_NAME = "TripLog";
 const OPERATOR = "TripLog 운영자";
-const CONTACT_EMAIL = "zerosoftdev003@gmail.com";
+const CONTACT_EMAIL = "seung9422@gmail.com";
 const EFFECTIVE_DATE = "2026-04-27";
 
 export default function PrivacyPage() {
