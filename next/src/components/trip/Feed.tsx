@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { ImageModal } from "@/components/ImageModal";
 import { api, API_BASE_URL, ApiError } from "@/lib/api";
+import { formatCurrency } from "@/lib/currency";
 import { dayKey, formatDayHeader, formatTimeShort } from "@/lib/datetime";
 import type { Expense, Photo, Place, Trip } from "@/lib/types";
 import { ExpenseForm } from "./ExpenseForm";
@@ -343,11 +344,8 @@ function ExpenseCard({
   return (
     <div>
       <div className="flex items-baseline justify-between gap-3">
-        <span className="font-mono text-base font-semibold">
-          {parseFloat(expense.amount).toLocaleString("en-US", {
-            maximumFractionDigits: 2,
-          })}{" "}
-          <span className="text-xs text-zinc-500">{expense.currency}</span>
+        <span className="text-base font-semibold">
+          {formatCurrency(parseFloat(expense.amount), expense.currency)}
         </span>
         {placeName && (
           <span className="truncate text-xs text-zinc-500">@ {placeName}</span>

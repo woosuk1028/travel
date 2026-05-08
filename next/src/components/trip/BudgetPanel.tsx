@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { formatCurrency } from "@/lib/currency";
 import type { Expense, Trip } from "@/lib/types";
 
 export function BudgetPanel({
@@ -40,13 +41,14 @@ export function BudgetPanel({
         <h2 className="text-lg font-semibold">예산</h2>
         {hasBudget ? (
           <span
-            className={`font-mono text-sm font-medium ${
+            className={`text-sm font-medium ${
               over
                 ? "text-red-600 dark:text-red-400"
                 : "text-zinc-600 dark:text-zinc-300"
             }`}
           >
-            {fmt(spent)} / {fmt(budget)} {trip.budgetCurrency}
+            {formatCurrency(spent, trip.budgetCurrency)} /{" "}
+            {formatCurrency(budget, trip.budgetCurrency)}
           </span>
         ) : (
           <span className="text-sm text-zinc-500">예산 미설정</span>
@@ -72,14 +74,13 @@ export function BudgetPanel({
               {over ? "예산 초과" : `사용률 ${(ratio * 100).toFixed(0)}%`}
             </span>
             <span
-              className={`font-mono font-semibold ${
+              className={`font-semibold ${
                 over
                   ? "text-red-600 dark:text-red-400"
                   : "text-emerald-600 dark:text-emerald-400"
               }`}
             >
-              {over ? "−" : ""}
-              {fmt(Math.abs(remaining))} {trip.budgetCurrency}{" "}
+              {formatCurrency(Math.abs(remaining), trip.budgetCurrency)}{" "}
               {over ? "초과" : "남음"}
             </span>
           </div>
@@ -90,7 +91,7 @@ export function BudgetPanel({
         <div className="mt-3 border-t border-zinc-100 pt-2 text-xs text-zinc-500 dark:border-zinc-800">
           <span className="mr-1">기타 통화 지출:</span>
           {otherCurrencies
-            .map(([cur, sum]) => `${fmt(sum)} ${cur}`)
+            .map(([cur, sum]) => formatCurrency(sum, cur))
             .join(" · ")}
         </div>
       )}
@@ -98,6 +99,3 @@ export function BudgetPanel({
   );
 }
 
-function fmt(n: number) {
-  return n.toLocaleString("en-US", { maximumFractionDigits: 2 });
-}
