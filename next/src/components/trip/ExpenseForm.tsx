@@ -3,12 +3,12 @@
 import { FormEvent, useState } from "react";
 import { api, ApiError } from "@/lib/api";
 import {
-  datetimeBounds,
   defaultPlanTime,
   fromLocalInputValue,
   toLocalInputValue,
 } from "@/lib/datetime";
 import type { Expense, ExpenseCategory, Place, Trip } from "@/lib/types";
+import { DateTimePicker } from "./DateTimePicker";
 import { Field, formInputClass, FormFooter, formCardClass } from "./formBits";
 
 const CATEGORIES: { value: ExpenseCategory; label: string; icon: string }[] = [
@@ -43,7 +43,6 @@ export function ExpenseForm({
 }) {
   const isEdit = mode.kind === "edit";
   const initial = isEdit ? mode.expense : null;
-  const bounds = datetimeBounds(trip.startDate, trip.endDate);
 
   const [amount, setAmount] = useState(initial?.amount ?? "");
   const [currency, setCurrency] = useState(initial?.currency ?? "KRW");
@@ -142,14 +141,11 @@ export function ExpenseForm({
         </div>
       </Field>
       <Field label="결제 시각" className="sm:col-span-2">
-        <input
-          type="datetime-local"
-          required
+        <DateTimePicker
           value={paidAt}
-          min={bounds.min}
-          max={bounds.max}
-          onChange={(e) => setPaidAt(e.target.value)}
-          className={formInputClass}
+          startDate={trip.startDate}
+          endDate={trip.endDate}
+          onChange={setPaidAt}
         />
       </Field>
       {places.length > 0 && (

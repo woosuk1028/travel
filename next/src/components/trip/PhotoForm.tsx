@@ -3,12 +3,12 @@
 import { FormEvent, useState } from "react";
 import { api, ApiError } from "@/lib/api";
 import {
-  datetimeBounds,
   defaultPlanTime,
   fromLocalInputValue,
   toLocalInputValue,
 } from "@/lib/datetime";
 import type { Photo, Place, Trip } from "@/lib/types";
+import { DateTimePicker } from "./DateTimePicker";
 import { Field, formInputClass, FormFooter, formCardClass } from "./formBits";
 
 type Mode = { kind: "create" } | { kind: "edit"; photo: Photo };
@@ -28,7 +28,6 @@ export function PhotoForm({
 }) {
   const isEdit = mode.kind === "edit";
   const initial = isEdit ? mode.photo : null;
-  const bounds = datetimeBounds(trip.startDate, trip.endDate);
 
   const [file, setFile] = useState<File | null>(null);
   const [caption, setCaption] = useState(initial?.caption ?? "");
@@ -102,13 +101,11 @@ export function PhotoForm({
         />
       </Field>
       <Field label="촬영 시각" className="sm:col-span-2">
-        <input
-          type="datetime-local"
+        <DateTimePicker
           value={takenAt}
-          min={bounds.min}
-          max={bounds.max}
-          onChange={(e) => setTakenAt(e.target.value)}
-          className={formInputClass}
+          startDate={trip.startDate}
+          endDate={trip.endDate}
+          onChange={setTakenAt}
         />
       </Field>
       {places.length > 0 && (

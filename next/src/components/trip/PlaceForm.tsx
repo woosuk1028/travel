@@ -3,12 +3,12 @@
 import { FormEvent, useState } from "react";
 import { api, ApiError } from "@/lib/api";
 import {
-  datetimeBounds,
   defaultPlanTime,
   fromLocalInputValue,
   toLocalInputValue,
 } from "@/lib/datetime";
 import type { Place, Trip } from "@/lib/types";
+import { DateTimePicker } from "./DateTimePicker";
 import { Field, formInputClass, FormFooter, formCardClass } from "./formBits";
 
 type Mode = { kind: "create" } | { kind: "edit"; place: Place };
@@ -26,7 +26,6 @@ export function PlaceForm({
 }) {
   const isEdit = mode.kind === "edit";
   const initial = isEdit ? mode.place : null;
-  const bounds = datetimeBounds(trip.startDate, trip.endDate);
 
   const [name, setName] = useState(initial?.name ?? "");
   const [address, setAddress] = useState(initial?.address ?? "");
@@ -86,17 +85,12 @@ export function PlaceForm({
         />
       </Field>
       <Field label="방문 시각" className="sm:col-span-2">
-        <input
-          type="datetime-local"
+        <DateTimePicker
           value={visitAt}
-          min={bounds.min}
-          max={bounds.max}
-          onChange={(e) => setVisitAt(e.target.value)}
-          className={formInputClass}
+          startDate={trip.startDate}
+          endDate={trip.endDate}
+          onChange={setVisitAt}
         />
-        <span className="text-xs text-zinc-500">
-          여행 기간({trip.startDate} ~ {trip.endDate}) 안에서 선택
-        </span>
       </Field>
       <Field label="메모" optional className="sm:col-span-2">
         <textarea
