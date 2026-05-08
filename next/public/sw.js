@@ -1,6 +1,6 @@
 // Travel Log service worker.
 // Bump CACHE version any time you want to force a fresh round of cache.
-const CACHE = "travel-cache-v4";
+const CACHE = "travel-cache-v5";
 const PRECACHE_URLS = ["/", "/login", "/signup", "/manifest.webmanifest"];
 
 self.addEventListener("install", (event) => {

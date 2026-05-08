@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 const WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"];
 const pad = (n: number) => String(n).padStart(2, "0");
@@ -40,7 +41,12 @@ export function DatePickerField({
   inline?: boolean;
 }) {
   const [open, setOpen] = useState(false);
+  const [portalRoot, setPortalRoot] = useState<HTMLElement | null>(null);
   const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (typeof document !== "undefined") setPortalRoot(document.body);
+  }, []);
 
   const today = useMemo(() => new Date(), []);
   const initial = parseYmd(value) ?? {
@@ -195,32 +201,38 @@ export function DatePickerField({
         )}
       </button>
 
-      {open && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          onClick={() => setOpen(false)}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm"
-        >
+      {open &&
+        portalRoot &&
+        createPortal(
           <div
-            onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-sm overflow-hidden rounded-xl bg-white shadow-2xl dark:bg-zinc-900"
+            role="dialog"
+            aria-modal="true"
+            onClick={() => setOpen(false)}
+            className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/40 p-4"
           >
-            <div className="flex items-center justify-between border-b border-zinc-200 px-3 py-2 dark:border-zinc-800">
-              <span className="text-sm font-medium">날짜 선택</span>
-              <button
-                type="button"
-                onClick={() => setOpen(false)}
-                aria-label="닫기"
-                className="flex h-7 w-7 items-center justify-center rounded-md text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
-              >
-                ✕
-              </button>
+            <div
+              onClick={(e) => e.stopPropagation()}
+              className="w-full max-w-sm overflow-hidden rounded-xl bg-white shadow-2xl dark:bg-zinc-900"
+            >
+              <div className="flex items-center justify-between border-b border-zinc-200 px-3 py-2 dark:border-zinc-800">
+                <span className="text-sm font-medium">날짜 선택</span>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setOpen(false);
+                  }}
+                  aria-label="닫기"
+                  className="flex h-9 w-9 items-center justify-center rounded-md text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
+                >
+                  ✕
+                </button>
+              </div>
+              <div className="p-3">{calendar}</div>
             </div>
-            <div className="p-3">{calendar}</div>
-          </div>
-        </div>
-      )}
+          </div>,
+          portalRoot,
+        )}
     </div>
   );
 }
