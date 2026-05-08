@@ -6,7 +6,7 @@ export function BackButton() {
   const pathname = usePathname();
   const router = useRouter();
 
-  if (pathname === "/") return null;
+  if (pathname === "/" || pathname === "/trips") return null;
 
   function goBack() {
     if (typeof window !== "undefined" && window.history.length > 1) {
