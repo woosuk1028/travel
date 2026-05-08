@@ -175,7 +175,6 @@ function EditForm({
       </Field>
       <Field label="시작일">
         <DatePickerField
-          inline
           value={startDate}
           onChange={(v) => {
             setStartDate(v);
@@ -186,7 +185,6 @@ function EditForm({
       </Field>
       <Field label="종료일">
         <DatePickerField
-          inline
           value={endDate}
           onChange={setEndDate}
           min={startDate || undefined}

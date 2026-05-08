@@ -109,7 +109,10 @@ export function DatePickerField({
       <div className="mb-2 flex items-center justify-between">
         <button
           type="button"
-          onClick={prevMonth}
+          onClick={(e) => {
+            e.stopPropagation();
+            prevMonth();
+          }}
           aria-label="이전 달"
           className="flex h-8 w-8 items-center justify-center rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800"
         >
@@ -120,7 +123,10 @@ export function DatePickerField({
         </span>
         <button
           type="button"
-          onClick={nextMonth}
+          onClick={(e) => {
+            e.stopPropagation();
+            nextMonth();
+          }}
           aria-label="다음 달"
           className="flex h-8 w-8 items-center justify-center rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800"
         >
@@ -190,8 +196,29 @@ export function DatePickerField({
       </button>
 
       {open && (
-        <div className="absolute left-0 right-0 top-full z-30 mt-1 shadow-lg">
-          {calendar}
+        <div
+          role="dialog"
+          aria-modal="true"
+          onClick={() => setOpen(false)}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-sm overflow-hidden rounded-xl bg-white shadow-2xl dark:bg-zinc-900"
+          >
+            <div className="flex items-center justify-between border-b border-zinc-200 px-3 py-2 dark:border-zinc-800">
+              <span className="text-sm font-medium">날짜 선택</span>
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                aria-label="닫기"
+                className="flex h-7 w-7 items-center justify-center rounded-md text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="p-3">{calendar}</div>
+          </div>
         </div>
       )}
     </div>
