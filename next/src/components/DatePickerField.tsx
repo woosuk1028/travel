@@ -64,19 +64,11 @@ export function DatePickerField({
 
   useEffect(() => {
     if (!open) return;
-    function onDoc(e: MouseEvent) {
-      if (!ref.current) return;
-      if (!ref.current.contains(e.target as Node)) setOpen(false);
-    }
     function onKey(e: KeyboardEvent) {
       if (e.key === "Escape") setOpen(false);
     }
-    document.addEventListener("mousedown", onDoc);
     document.addEventListener("keydown", onKey);
-    return () => {
-      document.removeEventListener("mousedown", onDoc);
-      document.removeEventListener("keydown", onKey);
-    };
+    return () => document.removeEventListener("keydown", onKey);
   }, [open]);
 
   const startWeekday = new Date(view.y, view.m, 1).getDay();
@@ -115,12 +107,9 @@ export function DatePickerField({
       <div className="mb-2 flex items-center justify-between">
         <button
           type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            prevMonth();
-          }}
+          onClick={prevMonth}
           aria-label="이전 달"
-          className="flex h-8 w-8 items-center justify-center rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800"
+          className="flex h-9 w-9 items-center justify-center rounded-md text-lg hover:bg-zinc-100 dark:hover:bg-zinc-800"
         >
           ‹
         </button>
@@ -129,12 +118,9 @@ export function DatePickerField({
         </span>
         <button
           type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            nextMonth();
-          }}
+          onClick={nextMonth}
           aria-label="다음 달"
-          className="flex h-8 w-8 items-center justify-center rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800"
+          className="flex h-9 w-9 items-center justify-center rounded-md text-lg hover:bg-zinc-100 dark:hover:bg-zinc-800"
         >
           ›
         </button>
@@ -163,11 +149,8 @@ export function DatePickerField({
               key={i}
               type="button"
               disabled={isDisabled(day)}
-              onClick={(e) => {
-                e.stopPropagation();
-                pick(day);
-              }}
-              className={`flex h-9 items-center justify-center rounded-md text-sm transition ${
+              onClick={() => pick(day)}
+              className={`flex h-11 items-center justify-center rounded-md text-sm transition ${
                 ymd(view.y, view.m, day) === value
                   ? "bg-indigo-600 text-white"
                   : isDisabled(day)
@@ -207,23 +190,16 @@ export function DatePickerField({
           <div
             role="dialog"
             aria-modal="true"
-            onClick={() => setOpen(false)}
             className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/40 p-4"
           >
-            <div
-              onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-sm overflow-hidden rounded-xl bg-white shadow-2xl dark:bg-zinc-900"
-            >
+            <div className="w-full max-w-sm overflow-hidden rounded-xl bg-white shadow-2xl dark:bg-zinc-900">
               <div className="flex items-center justify-between border-b border-zinc-200 px-3 py-2 dark:border-zinc-800">
                 <span className="text-sm font-medium">날짜 선택</span>
                 <button
                   type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setOpen(false);
-                  }}
+                  onClick={() => setOpen(false)}
                   aria-label="닫기"
-                  className="flex h-9 w-9 items-center justify-center rounded-md text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
+                  className="flex h-10 w-10 items-center justify-center rounded-md text-xl text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
                 >
                   ✕
                 </button>
