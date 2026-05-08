@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth";
+import { BackButton } from "./BackButton";
 import { PushToggle } from "./PushToggle";
 
 export function Nav() {
@@ -11,14 +12,17 @@ export function Nav() {
 
   return (
     <header className="sticky top-0 z-20 border-b border-zinc-200 bg-white/80 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/80">
-      <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-3">
-        <Link
-          href="/"
-          className="flex items-center gap-2 text-base font-semibold tracking-tight"
-        >
-          <span className="text-xl">✈️</span>
-          <span>TripLog</span>
-        </Link>
+      <div className="mx-auto flex max-w-5xl items-center justify-between gap-2 px-4 py-3 sm:px-6">
+        <div className="flex min-w-0 items-center gap-2">
+          <BackButton />
+          <Link
+            href="/"
+            className="flex items-center gap-2 text-base font-semibold tracking-tight"
+          >
+            <span className="text-xl">✈️</span>
+            <span>TripLog</span>
+          </Link>
+        </div>
         <nav className="flex items-center gap-3 text-sm">
           {user ? (
             <>
