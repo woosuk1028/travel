@@ -51,6 +51,7 @@ export function DatePickerField({
   useEffect(() => {
     const p = parseYmd(value);
     if (p) setView({ y: p.y, m: p.m });
+    setOpen(false);
   }, [value]);
 
   useEffect(() => {
