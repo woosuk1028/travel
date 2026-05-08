@@ -32,6 +32,16 @@ export default function TripsPage() {
   useEffect(() => {
     if (!user) return;
     void refresh();
+    const onShow = () => void refresh();
+    const onVisible = () => {
+      if (document.visibilityState === "visible") void refresh();
+    };
+    window.addEventListener("pageshow", onShow);
+    document.addEventListener("visibilitychange", onVisible);
+    return () => {
+      window.removeEventListener("pageshow", onShow);
+      document.removeEventListener("visibilitychange", onVisible);
+    };
   }, [user, refresh]);
 
   if (authLoading || !user) return <p className="text-zinc-500">로딩중...</p>;

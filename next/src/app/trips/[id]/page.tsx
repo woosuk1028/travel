@@ -52,7 +52,18 @@ export default function TripDetailPage() {
   }, [tripId]);
 
   useEffect(() => {
-    if (user) void refreshAll();
+    if (!user) return;
+    void refreshAll();
+    const onShow = () => void refreshAll();
+    const onVisible = () => {
+      if (document.visibilityState === "visible") void refreshAll();
+    };
+    window.addEventListener("pageshow", onShow);
+    document.addEventListener("visibilitychange", onVisible);
+    return () => {
+      window.removeEventListener("pageshow", onShow);
+      document.removeEventListener("visibilitychange", onVisible);
+    };
   }, [user, refreshAll]);
 
   if (authLoading || !user) return <p className="text-zinc-500">로딩중...</p>;
