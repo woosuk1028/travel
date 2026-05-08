@@ -27,9 +27,11 @@ export default function TripDetailPage() {
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [openForm, setOpenForm] = useState<FormKind>(null);
+  const [refreshing, setRefreshing] = useState(false);
 
   const refreshAll = useCallback(async () => {
     if (!Number.isFinite(tripId)) return;
+    setRefreshing(true);
     try {
       const [t, ps, es, phs] = await Promise.all([
         api.get<Trip>(`/trips/${tripId}`),
@@ -44,21 +46,13 @@ export default function TripDetailPage() {
     } catch (err) {
       const e = err as ApiError;
       setError(e.status === 404 ? "여행을 찾을 수 없습니다." : e.message);
+    } finally {
+      setRefreshing(false);
     }
   }, [tripId]);
 
   useEffect(() => {
-    if (!user) return;
-    void refreshAll();
-    const interval = setInterval(refreshAll, 10_000);
-    const onVisible = () => {
-      if (document.visibilityState === "visible") void refreshAll();
-    };
-    document.addEventListener("visibilitychange", onVisible);
-    return () => {
-      clearInterval(interval);
-      document.removeEventListener("visibilitychange", onVisible);
-    };
+    if (user) void refreshAll();
   }, [user, refreshAll]);
 
   if (authLoading || !user) return <p className="text-zinc-500">로딩중...</p>;
@@ -90,6 +84,35 @@ export default function TripDetailPage() {
 
   return (
     <article className="flex flex-col gap-6">
+      <div className="flex justify-end">
+        <button
+          type="button"
+          onClick={refreshAll}
+          disabled={refreshing}
+          aria-label="새로고침"
+          title="새로고침"
+          className="flex h-9 items-center gap-1.5 rounded-md border border-zinc-300 px-3 text-sm transition hover:bg-zinc-100 disabled:opacity-50 dark:border-zinc-700 dark:hover:bg-zinc-800"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className={`h-4 w-4 ${refreshing ? "animate-spin" : ""}`}
+            aria-hidden="true"
+          >
+            <path d="M3 12a9 9 0 0 1 15.3-6.4L21 8" />
+            <path d="M21 3v5h-5" />
+            <path d="M21 12a9 9 0 0 1-15.3 6.4L3 16" />
+            <path d="M3 21v-5h5" />
+          </svg>
+          <span>새로고침</span>
+        </button>
+      </div>
+
       <TripHeader trip={trip} onChanged={setTrip} />
 
       {isOwner && (

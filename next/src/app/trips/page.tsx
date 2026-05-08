@@ -7,8 +7,6 @@ import { api, ApiError } from "@/lib/api";
 import { useRequireAuth } from "@/lib/auth";
 import type { Trip } from "@/lib/types";
 
-const POLL_INTERVAL_MS = 10_000;
-
 export default function TripsPage() {
   const router = useRouter();
   const { loading: authLoading, user } = useRequireAuth();
@@ -17,27 +15,23 @@ export default function TripsPage() {
   const [showForm, setShowForm] = useState(false);
   const [showJoin, setShowJoin] = useState(false);
 
+  const [refreshing, setRefreshing] = useState(false);
+
   const refresh = useCallback(async () => {
+    setRefreshing(true);
     try {
       const list = await api.get<Trip[]>("/trips");
       setTrips(list);
     } catch (err) {
       setError((err as ApiError).message);
+    } finally {
+      setRefreshing(false);
     }
   }, []);
 
   useEffect(() => {
     if (!user) return;
     void refresh();
-    const interval = setInterval(refresh, POLL_INTERVAL_MS);
-    const onVisible = () => {
-      if (document.visibilityState === "visible") void refresh();
-    };
-    document.addEventListener("visibilitychange", onVisible);
-    return () => {
-      clearInterval(interval);
-      document.removeEventListener("visibilitychange", onVisible);
-    };
   }, [user, refresh]);
 
   if (authLoading || !user) return <p className="text-zinc-500">로딩중...</p>;
@@ -47,6 +41,7 @@ export default function TripsPage() {
       <header className="flex items-center justify-between gap-2">
         <h1 className="text-2xl font-semibold tracking-tight">내 여행</h1>
         <div className="flex gap-2">
+          <RefreshButton onClick={refresh} loading={refreshing} />
           <button
             type="button"
             onClick={() => {
@@ -173,6 +168,42 @@ export default function TripsPage() {
         </>
       )}
     </section>
+  );
+}
+
+function RefreshButton({
+  onClick,
+  loading,
+}: {
+  onClick: () => void;
+  loading: boolean;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={loading}
+      aria-label="새로고침"
+      title="새로고침"
+      className="flex h-9 w-9 items-center justify-center rounded-md border border-zinc-300 transition hover:bg-zinc-100 disabled:opacity-50 dark:border-zinc-700 dark:hover:bg-zinc-800"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className={`h-4 w-4 ${loading ? "animate-spin" : ""}`}
+        aria-hidden="true"
+      >
+        <path d="M3 12a9 9 0 0 1 15.3-6.4L21 8" />
+        <path d="M21 3v5h-5" />
+        <path d="M21 12a9 9 0 0 1-15.3 6.4L3 16" />
+        <path d="M3 21v-5h5" />
+      </svg>
+    </button>
   );
 }
 
