@@ -130,7 +130,7 @@ export function ExpenseForm({
               onClick={() => setCategory(c.value)}
               className={`flex flex-col items-center gap-1 rounded-lg border px-2 py-2 text-xs transition ${
                 category === c.value
-                  ? "border-indigo-500 bg-indigo-50 text-indigo-900 dark:border-indigo-400 dark:bg-indigo-950 dark:text-indigo-100"
+                  ? "border-blue-500 bg-blue-50 text-blue-900 dark:border-blue-400 dark:bg-blue-950 dark:text-blue-100"
                   : "border-zinc-200 bg-white hover:border-zinc-400 dark:border-zinc-800 dark:bg-zinc-900"
               }`}
             >

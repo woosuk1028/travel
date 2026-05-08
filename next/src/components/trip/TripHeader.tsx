@@ -59,15 +59,15 @@ export function TripHeader({
   }
 
   return (
-    <header className="rounded-2xl bg-gradient-to-br from-indigo-500 via-indigo-600 to-violet-700 p-6 text-white shadow-md">
+    <header className="rounded-2xl bg-gradient-to-br from-blue-500 via-blue-600 to-blue-700 p-6 text-white shadow-md">
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
           <h1 className="truncate text-3xl font-semibold tracking-tight">
             {trip.title}
           </h1>
-          <p className="mt-1 text-sm font-medium text-indigo-100">
+          <p className="mt-1 text-sm font-medium text-blue-100">
             {trip.startDate} ~ {trip.endDate}
-            <span className="ml-2 text-indigo-200">
+            <span className="ml-2 text-blue-200">
               ({tripDurationLabel(trip.startDate, trip.endDate)})
             </span>
           </p>
@@ -105,7 +105,7 @@ export function TripHeader({
         </span>
       )}
       {trip.description && (
-        <p className="mt-3 whitespace-pre-wrap text-sm text-indigo-50">
+        <p className="mt-3 whitespace-pre-wrap text-sm text-blue-50">
           {trip.description}
         </p>
       )}

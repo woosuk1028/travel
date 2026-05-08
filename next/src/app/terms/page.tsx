@@ -129,7 +129,7 @@ export default function TermsPage() {
           서비스 이용에 관한 문의는{" "}
           <a
             href={`mailto:${CONTACT_EMAIL}`}
-            className="font-medium text-indigo-600 hover:underline dark:text-indigo-400"
+            className="font-medium text-blue-600 hover:underline dark:text-blue-400"
           >
             {CONTACT_EMAIL}
           </a>

@@ -107,7 +107,7 @@ export function Feed({
       {groups.map(([day, items]) => (
         <section key={day} className="flex flex-col gap-3">
           <div className="sticky top-0 z-10 -mx-1 bg-zinc-50/95 px-1 py-1 backdrop-blur dark:bg-zinc-950/95">
-            <h3 className="text-sm font-semibold uppercase tracking-wide text-indigo-600 dark:text-indigo-400">
+            <h3 className="text-sm font-semibold uppercase tracking-wide text-blue-600 dark:text-blue-400">
               {formatDayHeader(day, trip.startDate)}
             </h3>
           </div>
@@ -273,7 +273,7 @@ function FeedRow({
         <button
           type="button"
           onClick={onEdit}
-          className="rounded px-1.5 py-0.5 font-medium text-indigo-600 hover:bg-indigo-50 dark:text-indigo-400 dark:hover:bg-indigo-950"
+          className="rounded px-1.5 py-0.5 font-medium text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-950"
         >
           수정
         </button>

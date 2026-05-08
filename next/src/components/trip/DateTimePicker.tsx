@@ -81,8 +81,8 @@ export function DateTimePicker({
               onClick={() => update(d, hour, minute)}
               className={`rounded-md px-2.5 py-1.5 text-xs font-medium transition ${
                 active
-                  ? "bg-indigo-600 text-white shadow-sm"
-                  : "border border-zinc-300 bg-white text-zinc-700 hover:border-indigo-400 hover:bg-indigo-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-indigo-500 dark:hover:bg-indigo-950"
+                  ? "bg-blue-600 text-white shadow-sm"
+                  : "border border-zinc-300 bg-white text-zinc-700 hover:border-blue-400 hover:bg-blue-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-blue-500 dark:hover:bg-blue-950"
               }`}
             >
               <span className="block leading-tight">Day {i + 1}</span>
@@ -97,7 +97,7 @@ export function DateTimePicker({
         <select
           value={hour}
           onChange={(e) => update(safeDate, e.target.value, minute)}
-          className="rounded-md border border-zinc-300 bg-white px-2 py-1.5 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-zinc-700 dark:bg-zinc-950"
+          className="rounded-md border border-zinc-300 bg-white px-2 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-zinc-700 dark:bg-zinc-950"
         >
           {HOURS.map((h) => (
             <option key={h} value={h}>
@@ -109,7 +109,7 @@ export function DateTimePicker({
         <select
           value={minute}
           onChange={(e) => update(safeDate, hour, e.target.value)}
-          className="rounded-md border border-zinc-300 bg-white px-2 py-1.5 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-zinc-700 dark:bg-zinc-950"
+          className="rounded-md border border-zinc-300 bg-white px-2 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-zinc-700 dark:bg-zinc-950"
         >
           {MINUTES.map((m) => (
             <option key={m} value={m}>

@@ -199,8 +199,8 @@ function AddBar({
             onClick={() => onToggle(b.kind)}
             className={`flex items-center justify-center gap-2 rounded-xl border px-3 py-3 text-sm font-medium transition ${
               active
-                ? "border-indigo-500 bg-indigo-600 text-white shadow-sm"
-                : "border-zinc-200 bg-white hover:border-indigo-300 hover:bg-indigo-50 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-indigo-700 dark:hover:bg-indigo-950"
+                ? "border-blue-500 bg-blue-600 text-white shadow-sm"
+                : "border-zinc-200 bg-white hover:border-blue-300 hover:bg-blue-50 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-blue-700 dark:hover:bg-blue-950"
             }`}
           >
             <span>{b.icon}</span>

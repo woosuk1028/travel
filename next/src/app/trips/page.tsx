@@ -61,7 +61,7 @@ export default function TripsPage() {
             }}
             className={`rounded-md border px-3 py-2 text-sm transition ${
               showJoin
-                ? "border-indigo-500 bg-indigo-50 text-indigo-700 dark:border-indigo-400 dark:bg-indigo-950 dark:text-indigo-200"
+                ? "border-blue-500 bg-blue-50 text-blue-700 dark:border-blue-400 dark:bg-blue-950 dark:text-blue-200"
                 : "border-zinc-300 hover:bg-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-800"
             }`}
           >
@@ -77,7 +77,7 @@ export default function TripsPage() {
               className={`rounded-md px-4 py-2 text-sm font-medium transition ${
                 showForm
                   ? "border border-zinc-300 dark:border-zinc-700"
-                  : "bg-indigo-600 text-white hover:bg-indigo-700"
+                  : "bg-blue-600 text-white hover:bg-blue-700"
               }`}
             >
               {showForm ? "취소" : "+ 새 여행"}
@@ -120,10 +120,10 @@ export default function TripsPage() {
               setShowForm(true);
               setShowJoin(false);
             }}
-            className="flex flex-col items-center gap-3 rounded-2xl border-2 border-dashed border-indigo-300 bg-white p-12 text-center transition hover:-translate-y-0.5 hover:border-indigo-500 hover:bg-indigo-50 hover:shadow-md dark:border-indigo-800 dark:bg-zinc-900 dark:hover:border-indigo-500 dark:hover:bg-indigo-950"
+            className="flex flex-col items-center gap-3 rounded-2xl border-2 border-dashed border-blue-300 bg-white p-12 text-center transition hover:-translate-y-0.5 hover:border-blue-500 hover:bg-blue-50 hover:shadow-md dark:border-blue-800 dark:bg-zinc-900 dark:hover:border-blue-500 dark:hover:bg-blue-950"
           >
             <span className="text-5xl">✈️</span>
-            <span className="text-xl font-semibold text-indigo-700 dark:text-indigo-300">
+            <span className="text-xl font-semibold text-blue-700 dark:text-blue-300">
               + 새 여행 만들기
             </span>
             <span className="text-sm text-zinc-500">
@@ -138,14 +138,14 @@ export default function TripsPage() {
             <li key={trip.id}>
               <Link
                 href={`/trips/${trip.id}`}
-                className="block overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-indigo-700"
+                className="block overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:border-blue-300 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-blue-700"
               >
-                <div className="h-2 w-full bg-gradient-to-r from-indigo-400 via-violet-500 to-fuchsia-500" />
+                <div className="h-2 w-full bg-gradient-to-r from-blue-400 via-blue-500 to-blue-500" />
                 <div className="p-4">
                   <div className="flex items-baseline justify-between gap-2">
                     <h2 className="text-lg font-medium">{trip.title}</h2>
                     {trip.role === "member" && (
-                      <span className="shrink-0 rounded-full bg-indigo-100 px-2 py-0.5 text-[10px] font-medium text-indigo-700 dark:bg-indigo-950 dark:text-indigo-200">
+                      <span className="shrink-0 rounded-full bg-blue-100 px-2 py-0.5 text-[10px] font-medium text-blue-700 dark:bg-blue-950 dark:text-blue-200">
                         🔗 공유
                       </span>
                     )}
@@ -170,7 +170,7 @@ export default function TripsPage() {
               setShowForm(true);
               setShowJoin(false);
             }}
-            className="flex items-center justify-center gap-2 rounded-xl border-2 border-dashed border-indigo-300 bg-white px-4 py-6 text-base font-medium text-indigo-700 transition hover:-translate-y-0.5 hover:border-indigo-500 hover:bg-indigo-50 hover:shadow-md dark:border-indigo-800 dark:bg-zinc-900 dark:text-indigo-300 dark:hover:border-indigo-500 dark:hover:bg-indigo-950"
+            className="flex items-center justify-center gap-2 rounded-xl border-2 border-dashed border-blue-300 bg-white px-4 py-6 text-base font-medium text-blue-700 transition hover:-translate-y-0.5 hover:border-blue-500 hover:bg-blue-50 hover:shadow-md dark:border-blue-800 dark:bg-zinc-900 dark:text-blue-300 dark:hover:border-blue-500 dark:hover:bg-blue-950"
           >
             <span className="text-xl">✈️</span>
             <span>+ 새 여행 만들기</span>
@@ -262,7 +262,7 @@ function CreateTripForm({ onCreated }: { onCreated: () => void }) {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="예: 오사카 3박 4일"
-          className="w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm placeholder:text-zinc-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-zinc-700 dark:bg-zinc-950"
+          className="w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm placeholder:text-zinc-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-zinc-700 dark:bg-zinc-950"
         />
       </label>
       <div className="flex flex-col gap-1.5 text-sm">
@@ -293,7 +293,7 @@ function CreateTripForm({ onCreated }: { onCreated: () => void }) {
           value={budget}
           onChange={(e) => setBudget(e.target.value)}
           placeholder="0"
-          className="w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-zinc-700 dark:bg-zinc-950"
+          className="w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-zinc-700 dark:bg-zinc-950"
         />
       </label>
       <label className="flex flex-col gap-1.5 text-sm">
@@ -301,7 +301,7 @@ function CreateTripForm({ onCreated }: { onCreated: () => void }) {
         <select
           value={budgetCurrency}
           onChange={(e) => setBudgetCurrency(e.target.value)}
-          className="w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-zinc-700 dark:bg-zinc-950"
+          className="w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-zinc-700 dark:bg-zinc-950"
         >
           <option value="KRW">원 (KRW)</option>
           <option value="USD">달러 (USD)</option>
@@ -316,7 +316,7 @@ function CreateTripForm({ onCreated }: { onCreated: () => void }) {
           rows={3}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className="w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-zinc-700 dark:bg-zinc-950"
+          className="w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-zinc-700 dark:bg-zinc-950"
         />
       </label>
       {error && (
@@ -328,7 +328,7 @@ function CreateTripForm({ onCreated }: { onCreated: () => void }) {
         <button
           type="submit"
           disabled={submitting}
-          className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700 disabled:opacity-60"
+          className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700 disabled:opacity-60"
         >
           {submitting ? "..." : "만들기"}
         </button>
@@ -377,13 +377,13 @@ function JoinByCodeForm({
           onChange={(e) => setCode(e.target.value.toUpperCase())}
           placeholder="A1B2C3D4"
           maxLength={16}
-          className="w-full rounded-md border border-zinc-300 bg-white px-3 py-2 font-mono text-base tracking-widest focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-zinc-700 dark:bg-zinc-950"
+          className="w-full rounded-md border border-zinc-300 bg-white px-3 py-2 font-mono text-base tracking-widest focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-zinc-700 dark:bg-zinc-950"
         />
       </label>
       <button
         type="submit"
         disabled={submitting || !code.trim()}
-        className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700 disabled:opacity-60"
+        className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700 disabled:opacity-60"
       >
         {submitting ? "..." : "참여"}
       </button>

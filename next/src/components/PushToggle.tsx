@@ -67,7 +67,7 @@ export function PushToggle() {
       aria-label={subscribed ? "알림 끄기" : "알림 켜기"}
       className={`rounded-md border px-2.5 py-1.5 text-sm transition ${
         subscribed
-          ? "border-indigo-500 bg-indigo-50 text-indigo-700 dark:border-indigo-400 dark:bg-indigo-950 dark:text-indigo-200"
+          ? "border-blue-500 bg-blue-50 text-blue-700 dark:border-blue-400 dark:bg-blue-950 dark:text-blue-200"
           : "border-zinc-300 hover:border-zinc-500 hover:bg-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-900"
       } disabled:opacity-50`}
     >

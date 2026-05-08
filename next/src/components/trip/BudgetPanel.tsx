@@ -64,7 +64,7 @@ export function BudgetPanel({
                   ? "bg-red-500"
                   : ratio > 0.8
                     ? "bg-amber-500"
-                    : "bg-indigo-600"
+                    : "bg-blue-600"
               }`}
               style={{ width: `${Math.max(ratio * 100, 2)}%` }}
             />

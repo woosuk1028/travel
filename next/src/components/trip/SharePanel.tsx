@@ -59,7 +59,7 @@ export function SharePanel({
           이 코드를 알려주면 상대가 여행 일정을 함께 볼 수 있습니다 (읽기 전용).
         </p>
         <div className="flex items-center gap-2">
-          <code className="flex-1 select-all rounded-md bg-indigo-50 px-3 py-2 text-center font-mono text-lg font-semibold tracking-widest text-indigo-700 dark:bg-indigo-950 dark:text-indigo-200">
+          <code className="flex-1 select-all rounded-md bg-blue-50 px-3 py-2 text-center font-mono text-lg font-semibold tracking-widest text-blue-700 dark:bg-blue-950 dark:text-blue-200">
             {trip.shareCode ?? "—"}
           </code>
           <button

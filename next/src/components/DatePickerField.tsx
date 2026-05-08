@@ -152,10 +152,10 @@ export function DatePickerField({
               onClick={() => pick(day)}
               className={`flex h-11 items-center justify-center rounded-md text-sm transition ${
                 ymd(view.y, view.m, day) === value
-                  ? "bg-indigo-600 text-white"
+                  ? "bg-blue-600 text-white"
                   : isDisabled(day)
                     ? "text-zinc-300 dark:text-zinc-700"
-                    : "hover:bg-indigo-50 dark:hover:bg-indigo-950"
+                    : "hover:bg-blue-50 dark:hover:bg-blue-950"
               }`}
             >
               {day}
@@ -175,7 +175,7 @@ export function DatePickerField({
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-left text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-zinc-700 dark:bg-zinc-950"
+        className="w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-left text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-zinc-700 dark:bg-zinc-950"
       >
         {value ? (
           <span>{formatLabel(value)}</span>

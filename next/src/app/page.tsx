@@ -29,7 +29,7 @@ export default function Home() {
       <div className="flex gap-3">
         <Link
           href="/signup"
-          className="rounded-md bg-indigo-600 px-5 py-2.5 font-medium text-white transition hover:bg-indigo-700"
+          className="rounded-md bg-blue-600 px-5 py-2.5 font-medium text-white transition hover:bg-blue-700"
         >
           시작하기
         </Link>

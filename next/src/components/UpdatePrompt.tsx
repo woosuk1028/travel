@@ -87,7 +87,7 @@ export function UpdatePrompt() {
   if (!waitingWorker) return null;
 
   return (
-    <div className="fixed inset-x-3 bottom-3 z-50 flex items-center justify-between gap-3 rounded-xl border border-indigo-300 bg-white p-3 shadow-lg sm:left-auto sm:right-4 sm:max-w-sm dark:border-indigo-700 dark:bg-zinc-900">
+    <div className="fixed inset-x-3 bottom-3 z-50 flex items-center justify-between gap-3 rounded-xl border border-blue-300 bg-white p-3 shadow-lg sm:left-auto sm:right-4 sm:max-w-sm dark:border-blue-700 dark:bg-zinc-900">
       <div className="flex flex-col">
         <span className="text-sm font-medium">새 버전이 있습니다</span>
         <span className="text-xs text-zinc-500">
@@ -105,7 +105,7 @@ export function UpdatePrompt() {
         <button
           type="button"
           onClick={applyUpdate}
-          className="rounded-md bg-indigo-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-indigo-700"
+          className="rounded-md bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-700"
         >
           업데이트
         </button>

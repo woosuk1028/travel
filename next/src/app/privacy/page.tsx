@@ -121,7 +121,7 @@ export default function PrivacyPage() {
             연락처:{" "}
             <a
               href={`mailto:${CONTACT_EMAIL}`}
-              className="font-medium text-indigo-600 hover:underline dark:text-indigo-400"
+              className="font-medium text-blue-600 hover:underline dark:text-blue-400"
             >
               {CONTACT_EMAIL}
             </a>

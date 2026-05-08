@@ -81,7 +81,7 @@ export default function SignupPage() {
         <button
           type="submit"
           disabled={submitting}
-          className="rounded-md bg-indigo-600 py-2.5 font-medium text-white transition hover:bg-indigo-700 disabled:opacity-60"
+          className="rounded-md bg-blue-600 py-2.5 font-medium text-white transition hover:bg-blue-700 disabled:opacity-60"
         >
           {submitting ? "..." : "회원가입"}
         </button>
@@ -90,7 +90,7 @@ export default function SignupPage() {
         이미 계정이 있으신가요?{" "}
         <Link
           href="/login"
-          className="font-medium text-indigo-600 hover:underline dark:text-indigo-400"
+          className="font-medium text-blue-600 hover:underline dark:text-blue-400"
         >
           로그인
         </Link>
@@ -100,7 +100,7 @@ export default function SignupPage() {
 }
 
 const inputClass =
-  "rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-zinc-700 dark:bg-zinc-950";
+  "rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-zinc-700 dark:bg-zinc-950";
 
 function Field({
   label,

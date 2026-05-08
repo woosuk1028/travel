@@ -28,7 +28,7 @@ export function Nav() {
             <>
               <Link
                 href="/trips"
-                className="hidden text-zinc-700 hover:text-indigo-600 dark:text-zinc-300 dark:hover:text-indigo-400 sm:inline"
+                className="hidden text-zinc-700 hover:text-blue-600 dark:text-zinc-300 dark:hover:text-blue-400 sm:inline"
               >
                 내 여행
               </Link>
@@ -52,13 +52,13 @@ export function Nav() {
             <>
               <Link
                 href="/login"
-                className="text-zinc-700 hover:text-indigo-600 dark:text-zinc-300 dark:hover:text-indigo-400"
+                className="text-zinc-700 hover:text-blue-600 dark:text-zinc-300 dark:hover:text-blue-400"
               >
                 로그인
               </Link>
               <Link
                 href="/signup"
-                className="rounded-md bg-indigo-600 px-3 py-1.5 font-medium text-white transition hover:bg-indigo-700"
+                className="rounded-md bg-blue-600 px-3 py-1.5 font-medium text-white transition hover:bg-blue-700"
               >
                 회원가입
               </Link>
