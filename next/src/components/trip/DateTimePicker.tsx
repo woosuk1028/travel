@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { WheelColumn } from "@/components/WheelColumn";
 
 const HOURS = Array.from({ length: 24 }, (_, i) =>
   String(i).padStart(2, "0"),
@@ -93,30 +94,20 @@ export function DateTimePicker({
           );
         })}
       </div>
-      <div className="flex items-center gap-2">
-        <select
+      <div className="flex items-center justify-center gap-2 rounded-lg border border-zinc-200 bg-white py-1 dark:border-zinc-800 dark:bg-zinc-900">
+        <WheelColumn
+          items={HOURS}
           value={hour}
-          onChange={(e) => update(safeDate, e.target.value, minute)}
-          className="rounded-md border border-zinc-300 bg-white px-2 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-zinc-700 dark:bg-zinc-950"
-        >
-          {HOURS.map((h) => (
-            <option key={h} value={h}>
-              {h}시
-            </option>
-          ))}
-        </select>
-        <span className="text-zinc-500">:</span>
-        <select
+          onChange={(h) => update(safeDate, h, minute)}
+          suffix="시"
+        />
+        <span className="text-zinc-400">:</span>
+        <WheelColumn
+          items={MINUTES}
           value={minute}
-          onChange={(e) => update(safeDate, hour, e.target.value)}
-          className="rounded-md border border-zinc-300 bg-white px-2 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-zinc-700 dark:bg-zinc-950"
-        >
-          {MINUTES.map((m) => (
-            <option key={m} value={m}>
-              {m}분
-            </option>
-          ))}
-        </select>
+          onChange={(m) => update(safeDate, hour, m)}
+          suffix="분"
+        />
       </div>
     </div>
   );
