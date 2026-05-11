@@ -23,7 +23,7 @@
    proportionally. 17px instead of the browser default 16px gives ~6% more
    reading comfort without breaking layouts. */
 html {
-  font-size: 17px;
+  font-size: 18px;
 }
 
 body {
