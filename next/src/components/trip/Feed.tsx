@@ -43,6 +43,16 @@ export function Feed({
 }) {
   const [editingKey, setEditingKey] = useState<string | null>(null);
   const [openPhoto, setOpenPhoto] = useState<Photo | null>(null);
+  const [collapsedDays, setCollapsedDays] = useState<Set<string>>(new Set());
+
+  function toggleDay(day: string) {
+    setCollapsedDays((prev) => {
+      const next = new Set(prev);
+      if (next.has(day)) next.delete(day);
+      else next.add(day);
+      return next;
+    });
+  }
 
   const groups = useMemo(() => {
     const fallback = `${trip.startDate}T00:00:00`;
@@ -105,40 +115,68 @@ export function Feed({
 
   return (
     <div className="flex flex-col gap-8">
-      {groups.map(([day, items]) => (
-        <section key={day} className="flex flex-col gap-3">
-          <div className="sticky top-0 z-10 -mx-1 bg-zinc-50/95 px-1 py-1 backdrop-blur dark:bg-zinc-950/95">
-            <h3 className="text-sm font-semibold uppercase tracking-wide text-blue-600 dark:text-blue-400">
-              {formatDayHeader(day, trip.startDate)}
-            </h3>
-          </div>
-          <ul className="flex flex-col gap-2">
-            {items.map((it) =>
-              editingKey === it.key ? (
-                <li key={it.key}>
-                  <EditFormFor
-                    item={it}
-                    trip={trip}
-                    places={places}
-                    onSaved={handleSaved}
-                    onCancel={() => setEditingKey(null)}
-                  />
-                </li>
-              ) : (
-                <FeedRow
-                  key={it.key}
-                  item={it}
-                  placesById={placesById}
-                  tripId={trip.id}
-                  onEdit={() => setEditingKey(it.key)}
-                  onOpenPhoto={setOpenPhoto}
-                  onChanged={onChanged}
-                />
-              ),
+      {groups.map(([day, items]) => {
+        const collapsed = collapsedDays.has(day);
+        return (
+          <section key={day} className="flex flex-col gap-3">
+            <button
+              type="button"
+              onClick={() => toggleDay(day)}
+              className="sticky top-0 z-10 -mx-1 flex w-[calc(100%+0.5rem)] items-center justify-between gap-2 bg-zinc-50/95 px-2 py-2 text-left backdrop-blur transition hover:bg-zinc-100/95 dark:bg-zinc-950/95 dark:hover:bg-zinc-900/95"
+              aria-expanded={!collapsed}
+            >
+              <h3 className="text-sm font-semibold uppercase tracking-wide text-blue-600 dark:text-blue-400">
+                {formatDayHeader(day, trip.startDate)}
+              </h3>
+              <span className="flex items-center gap-2 text-xs text-zinc-500">
+                <span>{items.length}개</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className={`h-4 w-4 transition-transform ${
+                    collapsed ? "-rotate-90" : "rotate-0"
+                  }`}
+                  aria-hidden="true"
+                >
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
+              </span>
+            </button>
+            {!collapsed && (
+              <ul className="flex flex-col gap-2">
+                {items.map((it) =>
+                  editingKey === it.key ? (
+                    <li key={it.key}>
+                      <EditFormFor
+                        item={it}
+                        trip={trip}
+                        places={places}
+                        onSaved={handleSaved}
+                        onCancel={() => setEditingKey(null)}
+                      />
+                    </li>
+                  ) : (
+                    <FeedRow
+                      key={it.key}
+                      item={it}
+                      placesById={placesById}
+                      tripId={trip.id}
+                      onEdit={() => setEditingKey(it.key)}
+                      onOpenPhoto={setOpenPhoto}
+                      onChanged={onChanged}
+                    />
+                  ),
+                )}
+              </ul>
             )}
-          </ul>
-        </section>
-      ))}
+          </section>
+        );
+      })}
 
       {openPhoto && (
         <ImageModal
