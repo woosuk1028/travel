@@ -204,7 +204,7 @@ function AddBar({
             }`}
           >
             <span>{b.icon}</span>
-            <span>{active ? "닫기" : `+ ${b.label}`}</span>
+            <span>+ {b.label}</span>
           </button>
         );
       })}
