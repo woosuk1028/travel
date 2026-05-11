@@ -84,7 +84,7 @@ export function PhotoForm({
             accept="image/*"
             required
             onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-            className="block text-sm file:mr-3 file:rounded-md file:border-0 file:bg-blue-600 file:px-3 file:py-1.5 file:text-white hover:file:bg-blue-700"
+            className="block w-full max-w-full text-sm file:mr-3 file:rounded-md file:border-0 file:bg-blue-600 file:px-3 file:py-1.5 file:text-white hover:file:bg-blue-700"
           />
         </Field>
       )}
