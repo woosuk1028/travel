@@ -11,11 +11,15 @@ export function WheelColumn({
   value,
   onChange,
   suffix,
+  itemLabel,
+  className = "w-16",
 }: {
   items: string[];
   value: string;
   onChange: (next: string) => void;
   suffix?: string;
+  itemLabel?: (item: string) => string;
+  className?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const settleTimer = useRef<number | null>(null);
@@ -54,7 +58,7 @@ export function WheelColumn({
 
   return (
     <div
-      className="relative w-16 select-none"
+      className={`relative select-none ${className}`}
       style={{ height: ITEM_HEIGHT * VISIBLE }}
     >
       <div
@@ -68,26 +72,30 @@ export function WheelColumn({
         style={{ scrollSnapType: "y mandatory" }}
       >
         <div style={{ height: ITEM_HEIGHT * CENTER }} aria-hidden="true" />
-        {items.map((item) => (
-          <div
-            key={item}
-            style={{
-              height: ITEM_HEIGHT,
-              scrollSnapAlign: "center",
-              scrollSnapStop: "always",
-            }}
-            className={`flex items-center justify-center transition-colors ${
-              item === value
-                ? "text-base font-semibold text-zinc-900 dark:text-zinc-100"
-                : "text-sm text-zinc-400 dark:text-zinc-500"
-            }`}
-          >
-            {item}
-            {item === value && suffix ? (
-              <span className="ml-0.5 text-xs text-zinc-500">{suffix}</span>
-            ) : null}
-          </div>
-        ))}
+        {items.map((item) => {
+          const display = itemLabel ? itemLabel(item) : item;
+          const isActive = item === value;
+          return (
+            <div
+              key={item}
+              style={{
+                height: ITEM_HEIGHT,
+                scrollSnapAlign: "center",
+                scrollSnapStop: "always",
+              }}
+              className={`flex items-center justify-center whitespace-nowrap transition-colors ${
+                isActive
+                  ? "text-base font-semibold text-zinc-900 dark:text-zinc-100"
+                  : "text-sm text-zinc-400 dark:text-zinc-500"
+              }`}
+            >
+              {display}
+              {isActive && suffix ? (
+                <span className="ml-0.5 text-xs text-zinc-500">{suffix}</span>
+              ) : null}
+            </div>
+          );
+        })}
         <div style={{ height: ITEM_HEIGHT * CENTER }} aria-hidden="true" />
       </div>
     </div>

@@ -70,29 +70,22 @@ export function DateTimePicker({
     onChange(`${d}T${h}:${m}`);
   }
 
+  const dayLabels = useMemo(() => {
+    const m = new Map<string, string>();
+    days.forEach((d, i) => m.set(d, `Day ${i + 1} · ${dayLabel(d)}`));
+    return m;
+  }, [days]);
+
   return (
     <div className="flex min-w-0 flex-col gap-2">
-      <div className="flex flex-wrap gap-1.5">
-        {days.map((d, i) => {
-          const active = d === safeDate;
-          return (
-            <button
-              key={d}
-              type="button"
-              onClick={() => update(d, hour, minute)}
-              className={`rounded-md px-2.5 py-1.5 text-xs font-medium transition ${
-                active
-                  ? "bg-blue-600 text-white shadow-sm"
-                  : "border border-zinc-300 bg-white text-zinc-700 hover:border-blue-400 hover:bg-blue-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-blue-500 dark:hover:bg-blue-950"
-              }`}
-            >
-              <span className="block leading-tight">Day {i + 1}</span>
-              <span className="block text-[10px] opacity-80">
-                {dayLabel(d)}
-              </span>
-            </button>
-          );
-        })}
+      <div className="flex justify-center rounded-lg border border-zinc-200 bg-white py-1 dark:border-zinc-800 dark:bg-zinc-900">
+        <WheelColumn
+          items={days}
+          value={safeDate}
+          onChange={(d) => update(d, hour, minute)}
+          itemLabel={(d) => dayLabels.get(d) ?? d}
+          className="w-full max-w-xs"
+        />
       </div>
       <div className="flex items-center justify-center gap-2 rounded-lg border border-zinc-200 bg-white py-1 dark:border-zinc-800 dark:bg-zinc-900">
         <WheelColumn
