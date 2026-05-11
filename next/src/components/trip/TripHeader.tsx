@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
+import { ActionMenu, type ActionMenuItem } from "@/components/ActionMenu";
 import { DatePickerField } from "@/components/DatePickerField";
 import { api, ApiError } from "@/lib/api";
 import type { Trip } from "@/lib/types";
@@ -58,11 +59,18 @@ export function TripHeader({
     );
   }
 
+  const menuItems: ActionMenuItem[] = [
+    { label: "수정", onClick: () => setEditing(true) },
+    isOwner
+      ? { label: "삭제", onClick: handleDelete, destructive: true }
+      : { label: "나가기", onClick: handleLeave, destructive: true },
+  ];
+
   return (
     <header className="rounded-2xl bg-gradient-to-br from-blue-500 via-blue-600 to-blue-700 p-6 text-white shadow-md">
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
-          <h1 className="truncate text-3xl font-semibold tracking-tight">
+          <h1 className="truncate text-[18px] font-semibold tracking-tight">
             {trip.title}
           </h1>
           <p className="mt-1 text-sm font-medium text-blue-100">
@@ -72,32 +80,10 @@ export function TripHeader({
             </span>
           </p>
         </div>
-        <div className="flex shrink-0 gap-2">
-          <button
-            type="button"
-            onClick={() => setEditing(true)}
-            className="rounded-md border border-white/30 bg-white/10 px-3 py-1.5 text-sm text-white backdrop-blur transition hover:bg-white/20"
-          >
-            수정
-          </button>
-          {isOwner ? (
-            <button
-              type="button"
-              onClick={handleDelete}
-              className="rounded-md border border-white/30 bg-white/10 px-3 py-1.5 text-sm text-white backdrop-blur transition hover:bg-red-500/40"
-            >
-              삭제
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={handleLeave}
-              className="rounded-md border border-white/30 bg-white/10 px-3 py-1.5 text-sm text-white backdrop-blur transition hover:bg-red-500/40"
-            >
-              나가기
-            </button>
-          )}
-        </div>
+        <ActionMenu
+          items={menuItems}
+          triggerClassName="flex h-9 w-9 items-center justify-center rounded-md border border-white/30 bg-white/10 text-lg text-white backdrop-blur transition hover:bg-white/20"
+        />
       </div>
       {!isOwner && (
         <span className="mt-2 inline-flex w-fit items-center gap-1 rounded-full bg-white/20 px-2 py-0.5 text-xs font-medium text-white">

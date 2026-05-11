@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { ActionMenu } from "@/components/ActionMenu";
 import { ImageModal } from "@/components/ImageModal";
 import { api, API_BASE_URL, ApiError } from "@/lib/api";
 import { formatCurrency } from "@/lib/currency";
@@ -269,21 +270,14 @@ function FeedRow({
           />
         )}
       </div>
-      <div className="flex shrink-0 flex-col items-end gap-1 self-start text-xs">
-        <button
-          type="button"
-          onClick={onEdit}
-          className="rounded px-1.5 py-0.5 font-medium text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-950"
-        >
-          수정
-        </button>
-        <button
-          type="button"
-          onClick={handleDelete}
-          className="rounded px-1.5 py-0.5 text-zinc-500 hover:bg-red-50 hover:text-red-600 dark:text-zinc-400 dark:hover:bg-red-950"
-        >
-          삭제
-        </button>
+      <div className="shrink-0 self-start">
+        <ActionMenu
+          items={[
+            { label: "수정", onClick: onEdit },
+            { label: "삭제", onClick: handleDelete, destructive: true },
+          ]}
+          triggerClassName="flex h-8 w-8 items-center justify-center rounded-md text-lg text-zinc-500 transition hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800"
+        />
       </div>
     </li>
   );
