@@ -17,10 +17,9 @@ export function Nav() {
           <BackButton />
           <Link
             href="/"
-            className="flex items-center gap-2 text-base font-semibold tracking-tight"
+            className="text-base font-semibold tracking-tight"
           >
-            <span className="text-xl">✈️</span>
-            <span>TripLog</span>
+            TripLog
           </Link>
         </div>
         <nav className="flex items-center gap-3 text-sm">
